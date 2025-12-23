@@ -253,23 +253,25 @@ struct OTPListView: View {
     private func syncToWatch(_ accountsData: Data) {
         guard WCSession.isSupported() else { return }
 
+        // Ensure WatchConnectivityManager is initialized (handles delegate)
+        _ = WatchConnectivityManager.shared
+
         let session = WCSession.default
 
-        // Activate session if not activated
+        // Wait for activation if needed
         if session.activationState == .notActivated {
-            print("📱 Activating WCSession for sync...")
-            session.delegate = WatchSessionDelegate.shared
-            session.activate()
-
-            // Wait a bit for activation and try again
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
+            print("📱 Waiting for WCSession activation...")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
                 self.syncToWatch(accountsData)
             }
             return
         }
 
         guard session.activationState == .activated else {
-            print("⚠️ WCSession activating, will retry...")
+            print("⚠️ WCSession not ready, will retry...")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
+                self.syncToWatch(accountsData)
+            }
             return
         }
 
@@ -277,17 +279,20 @@ struct OTPListView: View {
 
         // Try immediate send if reachable
         if session.isReachable {
+            print("📱 iPhone is reachable, sending immediate message")
             session.sendMessage(message, replyHandler: nil) { error in
-                print("Failed to send to Watch: \(error.localizedDescription)")
+                print("❌ Failed to send to Watch: \(error.localizedDescription)")
             }
+        } else {
+            print("📱 iPhone not reachable, using background sync")
         }
 
         // Always update context for background sync
         do {
             try session.updateApplicationContext(message)
-            print("✅ Synced \(accounts.count) accounts to Apple Watch")
+            print("✅ Synced \(accounts.count) accounts to Apple Watch via context")
         } catch {
-            print("Failed to update Watch context: \(error.localizedDescription)")
+            print("❌ Failed to update Watch context: \(error.localizedDescription)")
         }
     }
     #endif

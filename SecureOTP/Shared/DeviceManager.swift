@@ -59,10 +59,16 @@ class DeviceManager: ObservableObject {
     private func setupWatchConnectivity() {
         guard WCSession.isSupported() else { return }
 
+        // Use WatchConnectivityManager instead of setting delegate directly
+        _ = WatchConnectivityManager.shared
+
         let session = WCSession.default
-        session.delegate = WatchSessionDelegate.shared
-        session.activate()
-        print("📱 WCSession activation requested in DeviceManager")
+        print("📱 Using WatchConnectivityManager in DeviceManager")
+
+        // Wait for session to activate
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.onSessionActivated()
+        }
     }
 
     // Called when WCSession is activated

@@ -67,7 +67,8 @@ platform :ios do
       destination: "generic/platform=iOS",
       output_directory: "./build",
       output_name: "SecureOTP-Beta.ipa",
-      export_options_plist: "ExportOptions.plist"
+      export_method: "app-store",
+      export_options: "./ExportOptions.plist"
     )
 
     # Upload to TestFlight
@@ -130,7 +131,8 @@ platform :ios do
       destination: "generic/platform=iOS",
       output_directory: "./build",
       output_name: "SecureOTP-Release.ipa",
-      export_options_plist: "ExportOptions.plist"
+      export_method: "app-store",
+      export_options: "./ExportOptions.plist"
     )
 
     # Upload to App Store Connect

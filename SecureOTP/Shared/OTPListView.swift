@@ -75,7 +75,15 @@ struct OTPListView: View {
                 updateAccount(account, newIssuer: newIssuer, newAccountName: newAccountName)
             }
         }
-        .onAppear { loadAccounts() }
+        .onAppear {
+            loadAccounts()
+            // Auto-sync to Watch on app start
+            #if !os(watchOS)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.saveAccountsLocally()
+            }
+            #endif
+        }
         .refreshable { await syncAccounts() }
     }
 

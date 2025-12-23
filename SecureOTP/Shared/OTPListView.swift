@@ -246,12 +246,23 @@ struct OTPListView: View {
         guard WCSession.isSupported() else { return }
 
         let session = WCSession.default
-        guard session.activationState == .activated || session.activationState == .notActivated else { return }
 
-        // Activate session if needed
+        // Activate session if not activated
         if session.activationState == .notActivated {
+            print("📱 Activating WCSession for sync...")
             session.delegate = WatchSessionDelegate.shared
             session.activate()
+
+            // Wait a bit for activation and try again
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
+                self.syncToWatch(accountsData)
+            }
+            return
+        }
+
+        guard session.activationState == .activated else {
+            print("⚠️ WCSession activating, will retry...")
+            return
         }
 
         let message = ["accounts": accountsData]
@@ -263,7 +274,7 @@ struct OTPListView: View {
             }
         }
 
-        // Also update context for background sync
+        // Always update context for background sync
         do {
             try session.updateApplicationContext(message)
             print("✅ Synced \(accounts.count) accounts to Apple Watch")

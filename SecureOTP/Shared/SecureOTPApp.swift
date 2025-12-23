@@ -2,6 +2,71 @@ import SwiftUI
 #if canImport(UIKit)
 import UIKit
 #endif
+#if canImport(WatchConnectivity)
+import WatchConnectivity
+#endif
+
+// MARK: - Watch Session Delegate
+
+#if os(iOS) && canImport(WatchConnectivity)
+class WatchSessionDelegateShared: NSObject, WCSessionDelegate {
+    static let shared = WatchSessionDelegateShared()
+
+    private override init() {
+        super.init()
+    }
+
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        DispatchQueue.main.async {
+            if let error = error {
+                print("📱 WCSession activation failed: \(error.localizedDescription)")
+            } else {
+                print("📱 WCSession activated: \(activationState.rawValue)")
+
+                // Notify DeviceManager to detect connected devices
+                if activationState == .activated {
+                    DeviceManager.shared.onSessionActivated()
+                }
+            }
+        }
+    }
+
+    func sessionDidBecomeInactive(_ session: WCSession) {
+        print("📱 WCSession became inactive")
+    }
+
+    func sessionDidDeactivate(_ session: WCSession) {
+        print("📱 WCSession deactivated")
+        session.activate()
+    }
+
+    // Handle requests from Watch
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+        if message["request"] as? String == "accounts" {
+            var response: [String: Any] = [:]
+
+            // Send OTP accounts
+            if let data = UserDefaults.standard.data(forKey: "otp_accounts") {
+                response["accounts"] = data
+            } else {
+                response["accounts"] = Data()
+            }
+
+            // Send auth token
+            if let authToken = UserDefaults.standard.string(forKey: "auth_token") {
+                response["auth_token"] = authToken
+            }
+
+            // Send user data
+            if let userData = UserDefaults.standard.data(forKey: "current_user") {
+                response["user_data"] = userData
+            }
+
+            replyHandler(response)
+        }
+    }
+}
+#endif
 
 // MARK: - Shared State
 class AddAccountWindowState: ObservableObject {
@@ -115,6 +180,18 @@ struct SecureOTPApp: App {
     #if targetEnvironment(macCatalyst)
     @UIApplicationDelegateAdaptor(CatalystAppDelegate.self) var catalystDelegate
     #endif
+
+    init() {
+        // Initialize WatchConnectivity for iOS only
+        #if os(iOS) && canImport(WatchConnectivity)
+        if WCSession.isSupported() {
+            let session = WCSession.default
+            session.delegate = WatchSessionDelegateShared.shared
+            session.activate()
+            print("📱 SecureOTPApp: WCSession initialized and activated")
+        }
+        #endif
+    }
 
     var body: some Scene {
         WindowGroup {

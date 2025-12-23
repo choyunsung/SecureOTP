@@ -187,16 +187,43 @@ struct AccountView: View {
                     Label("theme", systemImage: "paintbrush")
                 }
 
-                // Biometric
-                if biometricType != .none {
-                    Toggle(isOn: $useBiometric) {
-                        if biometricType == .faceID {
-                            Label("use_faceid", systemImage: "faceid")
+                // Biometric Authentication
+                NavigationLink(destination: BiometricSettingsView()) {
+                    HStack(spacing: 12) {
+                        Image(systemName: biometricIconName)
+                            .foregroundStyle(.blue)
+                            .font(.system(size: 20))
+                            .frame(width: 28)
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(biometricDisplayName)
+                                .font(.body)
+                                .foregroundStyle(.primary)
+
+                            if BiometricAuthManager.shared.biometricType != .none {
+                                Text(BiometricAuthManager.shared.isBiometricEnabled ? "enabled" : "disabled")
+                                    .font(.caption)
+                                    .foregroundStyle(BiometricAuthManager.shared.isBiometricEnabled ? .green : .secondary)
+                            } else {
+                                Text("not_available")
+                                    .font(.caption)
+                                    .foregroundStyle(.orange)
+                            }
+                        }
+
+                        Spacer()
+
+                        if BiometricAuthManager.shared.isBiometricEnabled {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.green)
                         } else {
-                            Label("use_touchid", systemImage: "touchid")
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundStyle(.tertiary)
                         }
                     }
                 }
+                .foregroundStyle(.primary)
             }
 
             // About Section
@@ -271,6 +298,32 @@ struct AccountView: View {
             return "¥300"
         } else {
             return "$1.99"
+        }
+    }
+
+    private var biometricIconName: String {
+        switch BiometricAuthManager.shared.biometricType {
+        case .faceID:
+            return "faceid"
+        case .touchID:
+            return "touchid"
+        case .opticID:
+            return "opticid"
+        case .none:
+            return "lock.shield"
+        }
+    }
+
+    private var biometricDisplayName: String {
+        switch BiometricAuthManager.shared.biometricType {
+        case .faceID:
+            return "Face ID & Passcode"
+        case .touchID:
+            return "Touch ID & Passcode"
+        case .opticID:
+            return "Optic ID & Passcode"
+        case .none:
+            return "Biometric Authentication"
         }
     }
 

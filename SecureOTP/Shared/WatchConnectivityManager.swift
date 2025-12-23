@@ -95,9 +95,16 @@ extension WatchConnectivityManager: WCSessionDelegate {
             self.isReachable = session.isReachable
 
             if let error = error {
-                print("WCSession activation failed: \(error.localizedDescription)")
+                print("📱 WCSession activation failed: \(error.localizedDescription)")
             } else {
-                print("WCSession activated: \(activationState.rawValue)")
+                print("📱 WCSession activated: \(activationState.rawValue)")
+
+                // Notify DeviceManager to detect connected devices now that session is active
+                #if !os(watchOS)
+                if activationState == .activated {
+                    DeviceManager.shared.onSessionActivated()
+                }
+                #endif
             }
         }
     }

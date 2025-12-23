@@ -36,19 +36,31 @@ class WatchOTPManager: NSObject, ObservableObject {
     }
 
     func loadAccounts() {
-        // Load from local storage first (works without iPhone)
+        // PRIORITY 1: Load from shared App Group (fastest, works offline)
+        if let sharedAccounts = SharedUserDefaults.shared.loadOTPAccounts() {
+            DispatchQueue.main.async {
+                self.accounts = sharedAccounts
+                print("✅ Watch: Loaded \(sharedAccounts.count) accounts from shared container")
+            }
+            return // Found data in shared container, no need to check other sources
+        }
+
+        // PRIORITY 2: Load from local storage (backward compatibility)
         if let data = UserDefaults.standard.data(forKey: "otp_accounts"),
            let decoded = try? JSONDecoder().decode([OTPAccount].self, from: data) {
             DispatchQueue.main.async {
                 self.accounts = decoded
                 print("✅ Watch: Loaded \(decoded.count) accounts from local storage")
             }
+            // Copy to shared container for future use
+            SharedUserDefaults.shared.saveOTPAccounts(decoded)
+            return
         }
 
-        // Try to sync from iPhone via WatchConnectivity
+        // PRIORITY 3: Try to sync from iPhone via WatchConnectivity (if reachable)
         requestAccountsFromiPhone()
 
-        // Also try to sync from server if logged in
+        // PRIORITY 4: Sync from server if logged in
         if isLoggedIn {
             syncFromServer()
         }
@@ -229,6 +241,39 @@ extension WatchOTPManager: WCSessionDelegate {
             print("✅ Watch: Received user data from iPhone via context")
         } else {
             UserDefaults.standard.removeObject(forKey: "current_user")
+        }
+    }
+
+    // Receive transferUserInfo (fallback when updateApplicationContext fails)
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
+        print("⌚ Watch: didReceiveUserInfo called (fallback method)")
+        print("   - UserInfo keys: \(userInfo.keys)")
+
+        // Receive accounts
+        if let accountsData = userInfo["accounts"] as? Data {
+            UserDefaults.standard.set(accountsData, forKey: "otp_accounts")
+
+            if let accounts = try? JSONDecoder().decode([OTPAccount].self, from: accountsData) {
+                DispatchQueue.main.async {
+                    self.accounts = accounts
+                    print("✅ Watch: Received \(accounts.count) accounts from iPhone via transferUserInfo")
+                }
+            }
+        }
+
+        // Receive auth token
+        if let authToken = userInfo["auth_token"] as? String {
+            UserDefaults.standard.set(authToken, forKey: "auth_token")
+            DispatchQueue.main.async {
+                self.isLoggedIn = true
+                print("✅ Watch: Received auth token via transferUserInfo")
+            }
+        }
+
+        // Receive user data
+        if let userData = userInfo["user_data"] as? Data {
+            UserDefaults.standard.set(userData, forKey: "current_user")
+            print("✅ Watch: Received user data via transferUserInfo")
         }
     }
 }

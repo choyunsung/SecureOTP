@@ -36,15 +36,24 @@
 		53FAFDC1EDB3137939B69E7F /* AccountSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCBAFF5C9B1460824F8E11 /* AccountSelectionView.swift */; };
 		761F4926C2E37A3E8DECAABC /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DFAB4738ECE7D9437AB7A /* AdBannerView.swift */; };
 		7ACADB7FA3582D70071288E1 /* AccountSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCBAFF5C9B1460824F8E11 /* AccountSelectionView.swift */; };
+		7D0EAEFF2EFA76F30071F40D /* SharedUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0EAEFE2EFA76F30071F40D /* SharedUserDefaults.swift */; };
+		7D0EAF002EFA76F30071F40D /* SharedUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0EAEFE2EFA76F30071F40D /* SharedUserDefaults.swift */; };
+		7D0EAF012EFA76F30071F40D /* SharedUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0EAEFE2EFA76F30071F40D /* SharedUserDefaults.swift */; };
+		92AB8C7AF58B20299842F27E /* BiometricLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39139BE9F0C3AF116AE79B9 /* BiometricLockView.swift */; };
 		968009CA710A6280E7656007 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D04516BEE4FC9C938DD593A /* LocalizationManager.swift */; };
+		974ECDEC77108454B7698C66 /* BiometricSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED5EFD033A44925F4963125 /* BiometricSettingsView.swift */; };
 		A6E9EE2F8591DCDB5F586EB9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAEDD4132552752CF5BA8388 /* Localizable.strings */; };
 		AE78BD5AEF42DF2AA84D0D05 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DFAB4738ECE7D9437AB7A /* AdBannerView.swift */; };
 		B043663492C64A21FC34AD0C /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43999DF4A12535AC66271815 /* SubscriptionManager.swift */; };
+		B628412E9840F6234DB9EC5F /* BiometricSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED5EFD033A44925F4963125 /* BiometricSettingsView.swift */; };
 		B8E889EA51BD26F47932BA98 /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43999DF4A12535AC66271815 /* SubscriptionManager.swift */; };
 		CA11F8421A05D4B40BA24C72 /* DeviceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04352583299D4AEB88B88340 /* DeviceListView.swift */; };
 		D311E3AC60B919CADB15A967 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D04516BEE4FC9C938DD593A /* LocalizationManager.swift */; };
+		EECDA847C73FE50936AC49BF /* BiometricAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCC25550F5388FE4450D8BF /* BiometricAuthManager.swift */; };
 		F4014DB3BAE8F6904CE83F9E /* DeviceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04352583299D4AEB88B88340 /* DeviceListView.swift */; };
 		F5503CDCB97D207B6FC8BE72 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAEDD4132552752CF5BA8388 /* Localizable.strings */; };
+		FAFE7E988F028433774F454D /* BiometricLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39139BE9F0C3AF116AE79B9 /* BiometricLockView.swift */; };
+		FFB3061868656A072FC2EA86 /* BiometricAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCC25550F5388FE4450D8BF /* BiometricAuthManager.swift */; };
 		M001 /* SecureOTPApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101 /* SecureOTPApp.swift */; };
 		M002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102 /* ContentView.swift */; };
 		M003 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103 /* AuthManager.swift */; };
@@ -84,6 +93,7 @@
 /* Begin PBXFileReference section */
 		04352583299D4AEB88B88340 /* DeviceListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DeviceListView.swift; sourceTree = "<group>"; };
 		09DC05D606C6A6A828716079 /* ja */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0FCC25550F5388FE4450D8BF /* BiometricAuthManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BiometricAuthManager.swift; sourceTree = "<group>"; };
 		100 /* SecureOTP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SecureOTP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		101 /* SecureOTPApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureOTPApp.swift; sourceTree = "<group>"; };
 		102 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -109,7 +119,10 @@
 		43999DF4A12535AC66271815 /* SubscriptionManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubscriptionManager.swift; sourceTree = "<group>"; };
 		481B362DE6CC59BD55F718B4 /* SubscriptionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
 		6D04516BEE4FC9C938DD593A /* LocalizationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
+		6ED5EFD033A44925F4963125 /* BiometricSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BiometricSettingsView.swift; sourceTree = "<group>"; };
+		7D0EAEFE2EFA76F30071F40D /* SharedUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedUserDefaults.swift; sourceTree = "<group>"; };
 		8AA22CF3446265DEBE5BB711 /* ko */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D39139BE9F0C3AF116AE79B9 /* BiometricLockView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BiometricLockView.swift; sourceTree = "<group>"; };
 		D63CE759FCA3893A92055BC4 /* en */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DBFC29024DC650C68C89B6C3 /* zh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = zh; path = zh.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FBBCBAFF5C9B1460824F8E11 /* AccountSelectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AccountSelectionView.swift; sourceTree = "<group>"; };
@@ -181,6 +194,7 @@
 		303 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				7D0EAEFE2EFA76F30071F40D /* SharedUserDefaults.swift */,
 				101 /* SecureOTPApp.swift */,
 				102 /* ContentView.swift */,
 				103 /* AuthManager.swift */,
@@ -203,6 +217,9 @@
 				04352583299D4AEB88B88340 /* DeviceListView.swift */,
 				286515BEE3B30D64513E9879 /* AppInfoView.swift */,
 				FBBCBAFF5C9B1460824F8E11 /* AccountSelectionView.swift */,
+				0FCC25550F5388FE4450D8BF /* BiometricAuthManager.swift */,
+				6ED5EFD033A44925F4963125 /* BiometricSettingsView.swift */,
+				D39139BE9F0C3AF116AE79B9 /* BiometricLockView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -397,6 +414,10 @@
 				F4014DB3BAE8F6904CE83F9E /* DeviceListView.swift in Sources */,
 				52B21B1C7B0E63C18A9C44A9 /* AppInfoView.swift in Sources */,
 				53FAFDC1EDB3137939B69E7F /* AccountSelectionView.swift in Sources */,
+				7D0EAF002EFA76F30071F40D /* SharedUserDefaults.swift in Sources */,
+				FFB3061868656A072FC2EA86 /* BiometricAuthManager.swift in Sources */,
+				974ECDEC77108454B7698C66 /* BiometricSettingsView.swift in Sources */,
+				FAFE7E988F028433774F454D /* BiometricLockView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,6 +426,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				M001 /* SecureOTPApp.swift in Sources */,
+				7D0EAF012EFA76F30071F40D /* SharedUserDefaults.swift in Sources */,
 				M002 /* ContentView.swift in Sources */,
 				M003 /* AuthManager.swift in Sources */,
 				M004 /* SignInView.swift in Sources */,
@@ -427,6 +449,9 @@
 				CA11F8421A05D4B40BA24C72 /* DeviceListView.swift in Sources */,
 				44169241C0A52CFBFDA80A7E /* AppInfoView.swift in Sources */,
 				7ACADB7FA3582D70071288E1 /* AccountSelectionView.swift in Sources */,
+				EECDA847C73FE50936AC49BF /* BiometricAuthManager.swift in Sources */,
+				B628412E9840F6234DB9EC5F /* BiometricSettingsView.swift in Sources */,
+				92AB8C7AF58B20299842F27E /* BiometricLockView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,6 +460,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				W001 /* WatchApp.swift in Sources */,
+				7D0EAEFF2EFA76F30071F40D /* SharedUserDefaults.swift in Sources */,
 				W002 /* WatchContentView.swift in Sources */,
 				W003 /* WatchOTPManager.swift in Sources */,
 				W004 /* OTPAccount.swift in Sources */,
@@ -603,7 +629,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SecureOTP/SecureOTP.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 285DRRCCWB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SecureOTP/Info.plist;
@@ -637,7 +664,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SecureOTP/SecureOTP.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 285DRRCCWB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SecureOTP/Info.plist;
@@ -672,7 +700,7 @@
 				CODE_SIGN_ENTITLEMENTS = SecureOTP/SecureOTP.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -702,7 +730,7 @@
 				CODE_SIGN_ENTITLEMENTS = SecureOTP/SecureOTP.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -730,7 +758,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Secure OTP";
@@ -757,7 +785,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Secure OTP";

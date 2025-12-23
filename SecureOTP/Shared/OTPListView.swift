@@ -239,10 +239,14 @@ struct OTPListView: View {
     }
 
     private func saveAccountsLocally() {
+        // Save to shared App Group container (accessible by Watch app)
+        SharedUserDefaults.shared.saveOTPAccounts(accounts)
+
+        // Also keep in local UserDefaults for backward compatibility
         if let encoded = try? JSONEncoder().encode(accounts) {
             UserDefaults.standard.set(encoded, forKey: "otp_accounts")
 
-            // Sync to Apple Watch
+            // Still try WatchConnectivity as fallback
             #if !os(watchOS) && canImport(WatchConnectivity)
             syncToWatch(encoded)
             #endif
@@ -285,11 +289,15 @@ struct OTPListView: View {
         }
 
         // Always update context for background sync
+        // Try updateApplicationContext first
         do {
             try session.updateApplicationContext(message)
             print("✅ Synced \(accounts.count) accounts to Apple Watch via context")
         } catch {
-            print("❌ Failed to update Watch context: \(error.localizedDescription)")
+            print("⚠️ updateApplicationContext failed: \(error.localizedDescription)")
+            // Fallback: use transferUserInfo which doesn't check isWatchAppInstalled
+            session.transferUserInfo(message)
+            print("📤 Sent \(accounts.count) accounts via transferUserInfo (fallback)")
         }
     }
     #endif
@@ -445,65 +453,3 @@ struct EditOTPView: View {
         }
     }
 }
-
-// MARK: - Watch Session Delegate
-
-#if !os(watchOS) && canImport(WatchConnectivity)
-class WatchSessionDelegate: NSObject, WCSessionDelegate {
-    static let shared = WatchSessionDelegate()
-
-    private override init() {
-        super.init()
-    }
-
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        if let error = error {
-            print("📱 WCSession activation failed: \(error.localizedDescription)")
-        } else {
-            print("📱 WCSession activated: \(activationState.rawValue)")
-
-            // Notify DeviceManager to detect connected devices now that session is active
-            if activationState == .activated {
-                DispatchQueue.main.async {
-                    DeviceManager.shared.onSessionActivated()
-                }
-            }
-        }
-    }
-
-    func sessionDidBecomeInactive(_ session: WCSession) {
-        print("WCSession inactive")
-    }
-
-    func sessionDidDeactivate(_ session: WCSession) {
-        print("WCSession deactivated")
-        session.activate()
-    }
-
-    // Handle requests from Watch
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
-        if message["request"] as? String == "accounts" {
-            var response: [String: Any] = [:]
-
-            // Send OTP accounts
-            if let data = UserDefaults.standard.data(forKey: "otp_accounts") {
-                response["accounts"] = data
-            } else {
-                response["accounts"] = Data()
-            }
-
-            // Send auth token
-            if let authToken = UserDefaults.standard.string(forKey: "auth_token") {
-                response["auth_token"] = authToken
-            }
-
-            // Send user data
-            if let userData = UserDefaults.standard.data(forKey: "current_user") {
-                response["user_data"] = userData
-            }
-
-            replyHandler(response)
-        }
-    }
-}
-#endif

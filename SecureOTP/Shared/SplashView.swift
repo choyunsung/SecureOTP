@@ -2,13 +2,19 @@ import SwiftUI
 
 struct SplashView: View {
     @State private var isActive = false
+    @State private var isUnlocked = false
     @State private var logoScale: CGFloat = 0.5
     @State private var logoOpacity: Double = 0
     @State private var textOpacity: Double = 0
+    @ObservedObject private var biometricManager = BiometricAuthManager.shared
 
     var body: some View {
         if isActive {
-            ContentView()
+            if biometricManager.isBiometricEnabled && !isUnlocked {
+                BiometricLockView(isUnlocked: $isUnlocked)
+            } else {
+                ContentView()
+            }
         } else {
             ZStack {
                 // Background gradient

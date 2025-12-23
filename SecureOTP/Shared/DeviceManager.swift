@@ -216,35 +216,38 @@ class DeviceManager: ObservableObject {
         do {
             try session.updateApplicationContext(context)
             print("✅ Successfully sent data to Apple Watch via updateApplicationContext")
-
-            // Also try immediate send if reachable
-            if session.isReachable {
-                session.sendMessage(context, replyHandler: { reply in
-                    print("✅ Watch replied: \(reply)")
-                }) { error in
-                    print("⚠️ sendMessage failed: \(error.localizedDescription)")
-                }
-            } else {
-                print("ℹ️ Watch not reachable for immediate sync")
-            }
-
-            // Update last sync time for watch
-            if let index = devices.firstIndex(where: { $0.deviceType == .watch }) {
-                var updatedDevice = devices[index]
-                updatedDevice = SyncDevice(
-                    id: updatedDevice.id,
-                    name: updatedDevice.name,
-                    deviceType: updatedDevice.deviceType,
-                    lastSyncDate: Date(),
-                    isCurrentDevice: false
-                )
-                await MainActor.run {
-                    devices[index] = updatedDevice
-                    saveDevices()
-                }
-            }
         } catch {
-            print("❌ Failed to sync to Watch: \(error.localizedDescription)")
+            print("⚠️ updateApplicationContext failed: \(error.localizedDescription)")
+            // Fallback: use transferUserInfo which doesn't check isWatchAppInstalled
+            session.transferUserInfo(context)
+            print("📤 Sent data via transferUserInfo (fallback)")
+        }
+
+        // Also try immediate send if reachable
+        if session.isReachable {
+            session.sendMessage(context, replyHandler: { reply in
+                print("✅ Watch replied: \(reply)")
+            }) { error in
+                print("⚠️ sendMessage failed: \(error.localizedDescription)")
+            }
+        } else {
+            print("ℹ️ Watch not reachable for immediate sync")
+        }
+
+        // Update last sync time for watch
+        if let index = devices.firstIndex(where: { $0.deviceType == .watch }) {
+            var updatedDevice = devices[index]
+            updatedDevice = SyncDevice(
+                id: updatedDevice.id,
+                name: updatedDevice.name,
+                deviceType: updatedDevice.deviceType,
+                lastSyncDate: Date(),
+                isCurrentDevice: false
+            )
+            await MainActor.run {
+                devices[index] = updatedDevice
+                saveDevices()
+            }
         }
     }
     #endif

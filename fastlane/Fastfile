@@ -65,14 +65,9 @@ platform :ios do
       scheme: scheme,
       clean: true,
       export_method: "app-store",
+      destination: "generic/platform=iOS",
       output_directory: "./build",
-      output_name: "SecureOTP-Beta.ipa",
-      export_options: {
-        provisioningProfiles: {
-          "com.quettasoft.app.SecureOTP" => "match AppStore com.quettasoft.app.SecureOTP",
-          "com.quettasoft.app.SecureOTP.watchkitapp" => "match AppStore com.quettasoft.app.SecureOTP.watchkitapp"
-        }
-      }
+      output_name: "SecureOTP-Beta.ipa"
     )
 
     # Upload to TestFlight
@@ -133,14 +128,9 @@ platform :ios do
       scheme: scheme,
       clean: true,
       export_method: "app-store",
+      destination: "generic/platform=iOS",
       output_directory: "./build",
-      output_name: "SecureOTP-Release.ipa",
-      export_options: {
-        provisioningProfiles: {
-          "com.quettasoft.app.SecureOTP" => "match AppStore com.quettasoft.app.SecureOTP",
-          "com.quettasoft.app.SecureOTP.watchkitapp" => "match AppStore com.quettasoft.app.SecureOTP.watchkitapp"
-        }
-      }
+      output_name: "SecureOTP-Release.ipa"
     )
 
     # Upload to App Store Connect

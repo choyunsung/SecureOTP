@@ -67,7 +67,14 @@ platform :ios do
       export_method: "app-store",
       destination: "generic/platform=iOS",
       output_directory: "./build",
-      output_name: "SecureOTP-Beta.ipa"
+      output_name: "SecureOTP-Beta.ipa",
+      export_options: {
+        signingStyle: "automatic",
+        teamID: "285DRRCCWB",
+        uploadBitcode: false,
+        uploadSymbols: true,
+        compileBitcode: false
+      }
     )
 
     # Upload to TestFlight
@@ -130,7 +137,14 @@ platform :ios do
       export_method: "app-store",
       destination: "generic/platform=iOS",
       output_directory: "./build",
-      output_name: "SecureOTP-Release.ipa"
+      output_name: "SecureOTP-Release.ipa",
+      export_options: {
+        signingStyle: "automatic",
+        teamID: "285DRRCCWB",
+        uploadBitcode: false,
+        uploadSymbols: true,
+        compileBitcode: false
+      }
     )
 
     # Upload to App Store Connect

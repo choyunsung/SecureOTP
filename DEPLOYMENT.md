@@ -347,6 +347,91 @@ graph LR
     H --> I[승인 후 배포]
 ```
 
+## 📱 TestFlight 베타 테스터 초대
+
+### 방법 1: 공개 링크로 초대 (권장)
+
+TestFlight 공개 링크를 사용하면 최대 10,000명까지 초대 가능:
+
+1. **App Store Connect 접속**
+   - https://appstoreconnect.apple.com
+   - My Apps → SecureOTP 선택
+
+2. **TestFlight 탭 이동**
+   - 좌측 메뉴에서 "TestFlight" 클릭
+
+3. **공개 링크 활성화**
+   - "External Testing" 섹션에서 "+" 클릭
+   - 그룹 이름 입력 (예: "Public Beta Testers")
+   - "Enable Public Link" 활성화
+   - 공개 링크 복사
+
+4. **초대 코드 공유**
+   ```
+   https://testflight.apple.com/join/XXXXXXXX
+   ```
+   - 이 링크를 테스터에게 공유
+   - 또는 QR 코드 생성 가능
+
+### 방법 2: 이메일로 개별 초대
+
+특정 테스터만 초대하고 싶은 경우:
+
+1. **App Store Connect → TestFlight**
+2. **External Testing 그룹 선택**
+3. **Testers 탭에서 "+" 클릭**
+4. **이메일 주소 입력** (최대 100개)
+5. **초대 이메일 자동 발송**
+
+### 방법 3: fastlane으로 자동화 (고급)
+
+`fastlane/Fastfile`에 테스터 추가 lane 생성:
+
+```ruby
+lane :add_testers do |options|
+  pilot(
+    app_identifier: "com.quettasoft.app.SecureOTP",
+    distribute_external: true,
+    groups: ["Public Beta Testers"],
+    changelog: "새로운 베타 버전이 출시되었습니다!"
+  )
+end
+```
+
+실행:
+```bash
+fastlane add_testers
+```
+
+### 테스터가 받는 초대 과정
+
+1. **이메일 또는 링크 수신**
+2. **TestFlight 앱 설치** (App Store에서)
+3. **초대 수락**
+4. **SecureOTP 베타 버전 설치**
+
+### 베타 빌드 업데이트 알림
+
+`fastlane beta` 실행 후 자동으로:
+- 기존 테스터에게 푸시 알림 발송
+- "새 빌드 사용 가능" 메시지
+
+### 제한사항
+
+- **Internal Testing**: 최대 100명 (Apple Developer 계정 필요)
+- **External Testing**: 최대 10,000명 (Apple 심사 필요 - 첫 빌드만)
+- **베타 기간**: 최대 90일
+
+### 베타 정보 작성 (Beta App Information)
+
+첫 External Testing 배포 시 필수:
+
+1. **App Store Connect → TestFlight → App Information**
+2. **Beta App Description**: 앱 설명
+3. **Feedback Email**: 피드백 받을 이메일 주소
+4. **Privacy Policy URL**: (선택사항)
+5. **제출** → Apple 심사 (1-2일 소요)
+
 ## 📞 지원
 
 문제가 발생하면:

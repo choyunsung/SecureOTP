@@ -1,0 +1,147 @@
+/* Common */
+"ok" = "OK";
+"cancel" = "Cancel";
+"save" = "Save";
+"delete" = "Delete";
+"edit" = "Edit";
+"done" = "Done";
+"loading" = "Loading...";
+"refresh" = "Refresh";
+"error" = "Error";
+
+/* OTP List */
+"otp_services" = "OTP Services";
+"no_otp_services" = "No OTP Services";
+"tap_to_add" = "Tap '+' to add a service";
+"copy_code" = "Copy Code";
+"copied" = "Copied!";
+
+/* Account */
+"account" = "Account";
+"settings" = "Settings";
+"about" = "About";
+"sign_out" = "Sign Out";
+"guest_user" = "Guest User";
+"not_signed_in" = "Not signed in";
+
+/* Settings */
+"language" = "Language";
+"theme" = "Theme";
+"system" = "System";
+"light" = "Light";
+"dark" = "Dark";
+"use_faceid" = "Use Face ID";
+"use_touchid" = "Use Touch ID";
+
+/* About */
+"version" = "Version";
+"company" = "Company";
+"website" = "Website";
+
+/* Edit OTP */
+"edit_otp_account" = "Edit OTP Account";
+"account_information" = "Account Information";
+"issuer" = "Issuer";
+"account_name" = "Account Name";
+"secret_key" = "Secret Key";
+"secret_key_copied" = "Secret Key Copied!";
+"keep_secret_safe" = "Keep this secret key safe. You can use it to register this account in other OTP apps.";
+
+/* Add OTP */
+"add_otp_account" = "Add OTP Account";
+"scan_qr_code" = "Scan QR Code";
+"enter_manually" = "Enter Manually";
+
+/* Watch */
+"sync_from_iphone" = "Sync from iPhone";
+"refresh_from_server" = "Refresh from Server";
+"no_otp_accounts" = "No OTP Accounts";
+"add_accounts_on_iphone" = "Add accounts on iPhone";
+
+/* Sign In */
+"secure_otp" = "Secure OTP";
+"sign_in_to_continue" = "Sign in to continue";
+"sign_in_with_apple" = "Sign in with Apple";
+"continue_with_google" = "Continue with Google";
+"continue_with_email" = "Continue with Email";
+
+/* Subscription */
+"subscription" = "Subscription";
+"upgrade_to_pro" = "Upgrade to Pro";
+"current_plan" = "Current Plan";
+"manage_subscription" = "Manage Subscription";
+"restore_purchases" = "Restore Purchases";
+"pro_plan" = "Pro Plan";
+"free_plan" = "Free Plan";
+"monthly" = "Monthly";
+"recommended" = "Recommended";
+"subscribe" = "Subscribe";
+"subscribed" = "Subscribed";
+
+/* Subscription Features */
+"local_otp_storage" = "Local OTP Storage";
+"unlimited_accounts" = "Unlimited Accounts";
+"basic_security" = "Basic Security";
+"auto_sync" = "OTP Auto Sync";
+"cloud_backup" = "Cloud Backup";
+"device_recovery" = "Device Recovery";
+"multi_device_3_5" = "3-5 Devices";
+"security_alerts" = "Security Alerts";
+
+/* Subscription Messages */
+"sync_requires_pro" = "Sync Requires Pro";
+"upgrade_to_sync" = "Upgrade to Pro to sync your OTP accounts across devices";
+"unlock_premium_features" = "Unlock Premium Features";
+"sync_protect_access" = "Sync across devices, backup to cloud, and never lose access";
+"pro_active" = "Pro Active";
+"thank_you_for_subscribing" = "Thank you for subscribing!";
+"per_month" = "per month";
+"billed_monthly" = "Billed monthly, cancel anytime";
+"start_free_trial" = "Start Free Trial";
+"auto_renewable_subscription" = "Auto-renewable subscription";
+"terms_of_service" = "Terms of Service";
+"privacy_policy" = "Privacy Policy";
+
+/* Feature Descriptions */
+"auto_sync_desc" = "Automatic sync across all your devices";
+"cloud_backup_desc" = "Secure cloud backup of all your accounts";
+"device_recovery_desc" = "Restore access if you lose your device";
+"multi_device_3_5_desc" = "Use on up to 5 devices simultaneously";
+"security_alerts_desc" = "Get notified of security events";
+
+/* Ad Banner */
+"remove_ads_with_pro" = "Remove ads with Pro";
+"only_2900_per_month" = "Only ₩2,900/month";
+
+/* Sync Devices */
+"sync" = "Sync";
+"sync_devices" = "Sync Devices";
+"devices_connected" = "devices connected";
+"pro_required" = "Pro Required";
+"pro_feature" = "Pro Feature";
+"device_sync_requires_pro" = "Device sync requires a Pro subscription to keep your OTP accounts synchronized across all your devices";
+"connected_devices" = "Connected Devices";
+"device_sync_footer" = "Your OTP accounts are automatically synced across all connected devices";
+"device_list_free" = "You can view your connected devices";
+"otp_sync_requires_pro" = "Upgrade to Pro to sync OTP data across devices";
+"this_device" = "This Device";
+"last_sync_time" = "Last sync: %@";
+
+/* App Info */
+"app_info" = "App Info";
+"company_info" = "Company Information";
+"legal" = "Legal";
+"open_source_licenses" = "Open Source Licenses";
+
+/* Account Management */
+"account_management" = "Account Management";
+"current_account" = "Current Account";
+"current_account_footer" = "You are currently signed in with this account";
+"sign_in_methods" = "Sign-in Methods";
+"switch_account_info" = "Switch between different accounts or sign in with a different method";
+"signed_in" = "Signed In";
+"active" = "Active";
+"sign_out_and_switch" = "Sign Out & Switch Account";
+"sign_out_to_switch_info" = "Sign out to switch to a different account or sign-in method";
+"sign_in_to_sync_info" = "Sign in to sync your OTP accounts across all your devices";
+"go_to_sign_in" = "Go to Sign In";

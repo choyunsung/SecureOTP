@@ -81,6 +81,18 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+fastlane/README.md
+
+# Environment variables
+# NOTE: .env is included in git because this is a PRIVATE repository
+# For public repos, add .env to .gitignore!
+# .env
+.env.local
+.env.production
+
+# App Store Connect API Key (still keep these private)
+*.p8
+AuthKey_*.p8
 
 # Code Injection
 #

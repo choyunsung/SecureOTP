@@ -1,0 +1,278 @@
+# Fastfile
+# Customise this file, documentation can be found here:
+# https://docs.fastlane.tools/actions/
+# All available actions: https://docs.fastlane.tools/actions
+
+default_platform(:ios)
+
+platform :ios do
+
+  # Variables
+  xcodeproj = "SecureOTP.xcodeproj"
+  scheme = "SecureOTP"
+
+  #############
+  # BEFORE ALL
+  #############
+
+  before_all do
+    ensure_git_status_clean unless ENV["SKIP_GIT_CHECK"]
+  end
+
+  #############
+  # BUILD & TEST
+  #############
+
+  desc "Run tests"
+  lane :test do
+    run_tests(
+      project: xcodeproj,
+      scheme: scheme,
+      devices: ["iPhone 17 Pro"],
+      clean: true
+    )
+  end
+
+  desc "Build the app"
+  lane :build do
+    gym(
+      project: xcodeproj,
+      scheme: scheme,
+      clean: true,
+      export_method: "development",
+      output_directory: "./build",
+      output_name: "SecureOTP.ipa"
+    )
+  end
+
+  #############
+  # BETA DEPLOYMENT
+  #############
+
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    # Ensure we're on a clean state
+    ensure_git_status_clean
+
+    # Increment build number
+    increment_build_number(
+      xcodeproj: xcodeproj
+    )
+
+    # Build the app
+    build_app(
+      project: xcodeproj,
+      scheme: scheme,
+      clean: true,
+      export_method: "app-store",
+      output_directory: "./build",
+      output_name: "SecureOTP-Beta.ipa",
+      export_options: {
+        provisioningProfiles: {
+          "com.quettasoft.app.SecureOTP" => "match AppStore com.quettasoft.app.SecureOTP",
+          "com.quettasoft.app.SecureOTP.watchkitapp" => "match AppStore com.quettasoft.app.SecureOTP.watchkitapp"
+        }
+      }
+    )
+
+    # Upload to TestFlight
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      skip_submission: true,
+      notify_external_testers: false
+    )
+
+    # Commit version bump
+    commit_version_bump(
+      message: "Version Bump by fastlane",
+      xcodeproj: xcodeproj
+    )
+
+    # Add git tag
+    add_git_tag(
+      tag: "beta-#{get_version_number}-#{get_build_number}"
+    )
+
+    # Push to git
+    push_to_git_remote
+
+    # Notify success
+    slack(
+      message: "Successfully uploaded beta build to TestFlight! 🚀",
+      success: true
+    ) if ENV["SLACK_URL"]
+  end
+
+  #############
+  # PRODUCTION DEPLOYMENT
+  #############
+
+  desc "Deploy a new version to the App Store"
+  lane :release do
+    # Ensure we're on a clean state
+    ensure_git_status_clean
+
+    # Ensure we're on main branch
+    ensure_git_branch(
+      branch: "main"
+    )
+
+    # Increment version number (optional - comment out if manual)
+    # increment_version_number(
+    #   bump_type: "patch" # or "minor" or "major"
+    # )
+
+    # Increment build number
+    increment_build_number(
+      xcodeproj: xcodeproj
+    )
+
+    # Build the app
+    build_app(
+      project: xcodeproj,
+      scheme: scheme,
+      clean: true,
+      export_method: "app-store",
+      output_directory: "./build",
+      output_name: "SecureOTP-Release.ipa",
+      export_options: {
+        provisioningProfiles: {
+          "com.quettasoft.app.SecureOTP" => "match AppStore com.quettasoft.app.SecureOTP",
+          "com.quettasoft.app.SecureOTP.watchkitapp" => "match AppStore com.quettasoft.app.SecureOTP.watchkitapp"
+        }
+      }
+    )
+
+    # Upload to App Store Connect
+    upload_to_app_store(
+      skip_metadata: false,
+      skip_screenshots: true,
+      submit_for_review: false,
+      automatic_release: false,
+      force: true
+    )
+
+    # Commit version bump
+    commit_version_bump(
+      message: "Release Version #{get_version_number} (#{get_build_number})",
+      xcodeproj: xcodeproj
+    )
+
+    # Add git tag
+    add_git_tag(
+      tag: "v#{get_version_number}"
+    )
+
+    # Push to git
+    push_to_git_remote
+
+    # Notify success
+    slack(
+      message: "Successfully uploaded new version to App Store! 🎉\nVersion: #{get_version_number} (#{get_build_number})",
+      success: true
+    ) if ENV["SLACK_URL"]
+  end
+
+  #############
+  # SCREENSHOTS
+  #############
+
+  desc "Generate screenshots for all devices and languages"
+  lane :screenshots do
+    capture_screenshots(
+      scheme: scheme,
+      output_directory: "./fastlane/screenshots",
+      clear_previous_screenshots: true,
+      override_status_bar: true
+    )
+
+    # Upload screenshots to App Store Connect
+    upload_to_app_store(
+      skip_binary_upload: true,
+      skip_metadata: true
+    )
+  end
+
+  #############
+  # CODE SIGNING
+  #############
+
+  desc "Setup code signing with match"
+  lane :setup_signing do
+    match(
+      type: "development",
+      app_identifier: [
+        "com.quettasoft.app.SecureOTP",
+        "com.quettasoft.app.SecureOTP.watchkitapp"
+      ]
+    )
+
+    match(
+      type: "appstore",
+      app_identifier: [
+        "com.quettasoft.app.SecureOTP",
+        "com.quettasoft.app.SecureOTP.watchkitapp"
+      ]
+    )
+  end
+
+  #############
+  # UTILITIES
+  #############
+
+  desc "Increment version number (patch/minor/major)"
+  lane :bump_version do |options|
+    bump_type = options[:type] || "patch"
+
+    increment_version_number(
+      bump_type: bump_type,
+      xcodeproj: xcodeproj
+    )
+
+    UI.success("Version bumped to: #{get_version_number}")
+  end
+
+  desc "Set specific version number"
+  lane :set_version do |options|
+    version = options[:version]
+
+    increment_version_number(
+      version_number: version,
+      xcodeproj: xcodeproj
+    )
+
+    UI.success("Version set to: #{get_version_number}")
+  end
+
+  desc "Get current version and build number"
+  lane :version_info do
+    version = get_version_number(xcodeproj: xcodeproj)
+    build = get_build_number(xcodeproj: xcodeproj)
+
+    UI.important("Current Version: #{version} (#{build})")
+  end
+
+  desc "Clean build artifacts"
+  lane :clean do
+    clear_derived_data
+    sh("rm -rf ../build")
+    UI.success("Cleaned build artifacts")
+  end
+
+  #############
+  # ERROR HANDLING
+  #############
+
+  error do |lane, exception|
+    slack(
+      message: "Lane #{lane} failed with exception: #{exception}",
+      success: false
+    ) if ENV["SLACK_URL"]
+  end
+
+  after_all do |lane|
+    # Clean up
+    # notification(message: "Fastlane finished '#{lane}'")
+  end
+
+end

@@ -1,0 +1,14 @@
+# Appfile
+# For more information about the Appfile, see:
+# https://docs.fastlane.tools/advanced/#appfile
+
+# App Identifier
+app_identifier("com.quettasoft.app.SecureOTP") # iOS app identifier
+apple_id(ENV["APPLE_ID"]) # Your Apple Developer Portal email address
+
+# Team ID (found in Apple Developer Portal)
+itc_team_id(ENV["ITC_TEAM_ID"]) # App Store Connect Team ID
+team_id(ENV["TEAM_ID"]) # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+# https://docs.fastlane.tools/advanced/#appfile

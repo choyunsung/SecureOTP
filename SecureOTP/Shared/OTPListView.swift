@@ -1,11 +1,21 @@
 import SwiftUI
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
+#if canImport(WatchConnectivity)
+import WatchConnectivity
+#endif
 
 struct OTPListView: View {
     @State private var accounts: [OTPAccount] = []
     @State private var showAddAccount = false
+    @State private var editingAccount: OTPAccount?
     @State private var isLoading = false
     @State private var isSyncing = false
 
+    @ObservedObject private var subscriptionManager = SubscriptionManager.shared
     private let api = APIService.shared
 
     var body: some View {
@@ -28,7 +38,7 @@ struct OTPListView: View {
                 listView
             }
         }
-        .navigationTitle("OTP Services")
+        .navigationTitle("otp_services")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 if isSyncing {
@@ -53,13 +63,18 @@ struct OTPListView: View {
                 }
             }
         }
-        #if os(iOS)
         .sheet(isPresented: $showAddAccount) {
+            #if os(iOS)
             AddOTPView { account in
                 addAccount(account)
             }
+            #endif
         }
-        #endif
+        .sheet(item: $editingAccount) { account in
+            EditOTPView(account: account) { newIssuer, newAccountName in
+                updateAccount(account, newIssuer: newIssuer, newAccountName: newAccountName)
+            }
+        }
         .onAppear { loadAccounts() }
         .refreshable { await syncAccounts() }
     }
@@ -75,10 +90,10 @@ struct OTPListView: View {
                     .font(.system(size: 44))
                     .foregroundStyle(.blue)
             }
-            Text("No OTP Services")
+            Text("no_otp_services")
                 .font(.title2)
                 .fontWeight(.bold)
-            Text("Tap '+' to add a service")
+            Text("tap_to_add")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             Spacer()
@@ -86,16 +101,24 @@ struct OTPListView: View {
     }
 
     private var listView: some View {
-        ScrollView {
-            LazyVStack(spacing: 12) {
-                ForEach(accounts) { account in
-                    OTPRowView(account: account, onDelete: {
-                        deleteAccount(account)
-                    })
+        VStack(spacing: 0) {
+            ScrollView {
+                LazyVStack(spacing: 12) {
+                    ForEach(accounts) { account in
+                        OTPRowView(account: account, onDelete: {
+                            deleteAccount(account)
+                        }, onEdit: {
+                            editingAccount = account
+                        })
+                    }
                 }
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+                .padding(.bottom, 16)
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 8)
+
+            // Ad Banner for free users
+            AdBannerView()
         }
     }
 
@@ -114,6 +137,12 @@ struct OTPListView: View {
 
     private func syncAccounts() async {
         guard !isSyncing else { return }
+
+        // Check if user has Pro subscription
+        // If not Pro, silently skip sync (no popup)
+        guard subscriptionManager.canSync else {
+            return
+        }
 
         await MainActor.run { isSyncing = true }
 
@@ -160,6 +189,33 @@ struct OTPListView: View {
         }
     }
 
+    private func updateAccount(_ account: OTPAccount, newIssuer: String, newAccountName: String) {
+        // Create updated account
+        let updatedAccount = OTPAccount(
+            id: account.id,
+            issuer: newIssuer,
+            accountName: newAccountName,
+            secret: account.secret
+        )
+
+        // Update in local array
+        if let index = accounts.firstIndex(where: { $0.id == account.id }) {
+            accounts[index] = updatedAccount
+            saveAccountsLocally()
+
+            // Sync to server
+            Task {
+                do {
+                    // Delete old and add new (as update)
+                    try await api.deleteOTPAccount(id: account.id.uuidString)
+                    _ = try await api.addOTPAccount(updatedAccount)
+                } catch {
+                    print("Failed to update account on server: \(error)")
+                }
+            }
+        }
+    }
+
     private func deleteAccount(_ account: OTPAccount) {
         accounts.removeAll { $0.id == account.id }
         saveAccountsLocally()
@@ -177,6 +233,256 @@ struct OTPListView: View {
     private func saveAccountsLocally() {
         if let encoded = try? JSONEncoder().encode(accounts) {
             UserDefaults.standard.set(encoded, forKey: "otp_accounts")
+
+            // Sync to Apple Watch
+            #if !os(watchOS) && canImport(WatchConnectivity)
+            syncToWatch(encoded)
+            #endif
+        }
+    }
+
+    #if !os(watchOS) && canImport(WatchConnectivity)
+    private func syncToWatch(_ accountsData: Data) {
+        guard WCSession.isSupported() else { return }
+
+        let session = WCSession.default
+        guard session.activationState == .activated || session.activationState == .notActivated else { return }
+
+        // Activate session if needed
+        if session.activationState == .notActivated {
+            session.delegate = WatchSessionDelegate.shared
+            session.activate()
+        }
+
+        let message = ["accounts": accountsData]
+
+        // Try immediate send if reachable
+        if session.isReachable {
+            session.sendMessage(message, replyHandler: nil) { error in
+                print("Failed to send to Watch: \(error.localizedDescription)")
+            }
+        }
+
+        // Also update context for background sync
+        do {
+            try session.updateApplicationContext(message)
+            print("✅ Synced \(accounts.count) accounts to Apple Watch")
+        } catch {
+            print("Failed to update Watch context: \(error.localizedDescription)")
+        }
+    }
+    #endif
+}
+
+// MARK: - Edit OTP View
+
+struct EditOTPView: View {
+    let account: OTPAccount
+    var onSave: ((String, String) -> Void)?
+    var onCancel: (() -> Void)?
+
+    @State private var issuer: String
+    @State private var accountName: String
+    @State private var showSecret = false
+    @State private var showCopied = false
+
+    @Environment(\.dismiss) private var dismiss
+
+    init(account: OTPAccount, onSave: ((String, String) -> Void)? = nil, onCancel: (() -> Void)? = nil) {
+        self.account = account
+        self.onSave = onSave
+        self.onCancel = onCancel
+        _issuer = State(initialValue: account.issuer)
+        _accountName = State(initialValue: account.accountName)
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("account_information") {
+                    TextField("issuer", text: $issuer)
+                        #if os(iOS)
+                        .textInputAutocapitalization(.never)
+                        #endif
+
+                    TextField("account_name", text: $accountName)
+                        #if os(iOS)
+                        .textInputAutocapitalization(.never)
+                        #endif
+                }
+
+                Section {
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Text("secret_key")
+                                .font(.headline)
+                            Spacer()
+                            Button(action: {
+                                withAnimation {
+                                    showSecret.toggle()
+                                }
+                            }) {
+                                Image(systemName: showSecret ? "eye.slash.fill" : "eye.fill")
+                                    .foregroundStyle(.blue)
+                            }
+                        }
+
+                        if showSecret {
+                            HStack {
+                                Text(formatSecret(account.secret))
+                                    .font(.system(.body, design: .monospaced))
+                                    .textSelection(.enabled)
+                                    .foregroundStyle(.secondary)
+
+                                Spacer()
+
+                                Button(action: {
+                                    copyToClipboard(account.secret)
+                                    showCopiedFeedback()
+                                }) {
+                                    Image(systemName: "doc.on.doc")
+                                        .foregroundStyle(.blue)
+                                }
+                            }
+                            .padding(.vertical, 8)
+                            .transition(.opacity.combined(with: .move(edge: .top)))
+                        }
+                    }
+                } header: {
+                    Text(LocalizedStringKey("secret_key"))
+                } footer: {
+                    Text(LocalizedStringKey("keep_secret_safe"))
+                        .font(.caption)
+                }
+            }
+            .navigationTitle("edit_otp_account")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("cancel") {
+                        if let onCancel = onCancel {
+                            onCancel()
+                        } else {
+                            dismiss()
+                        }
+                    }
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("save") {
+                        if let onSave = onSave {
+                            onSave(issuer.trimmingCharacters(in: .whitespaces),
+                                   accountName.trimmingCharacters(in: .whitespaces))
+                        }
+                        dismiss()
+                    }
+                    .disabled(accountName.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
+            }
+            .overlay(alignment: .center) {
+                if showCopied {
+                    Text("secret_key_copied")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(Color.black.opacity(0.75))
+                        .clipShape(Capsule())
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+            .animation(.easeInOut(duration: 0.2), value: showCopied)
+        }
+    }
+
+    private func formatSecret(_ secret: String) -> String {
+        // Format secret in groups of 4 for readability
+        var formatted = ""
+        for (index, char) in secret.enumerated() {
+            if index > 0 && index % 4 == 0 {
+                formatted += " "
+            }
+            formatted.append(char)
+        }
+        return formatted
+    }
+
+    private func copyToClipboard(_ text: String) {
+        #if os(macOS)
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
+        #else
+        UIPasteboard.general.string = text
+        #endif
+    }
+
+    private func showCopiedFeedback() {
+        showCopied = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            showCopied = false
         }
     }
 }
+
+// MARK: - Watch Session Delegate
+
+#if !os(watchOS) && canImport(WatchConnectivity)
+class WatchSessionDelegate: NSObject, WCSessionDelegate {
+    static let shared = WatchSessionDelegate()
+
+    private override init() {
+        super.init()
+    }
+
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        if let error = error {
+            print("📱 WCSession activation failed: \(error.localizedDescription)")
+        } else {
+            print("📱 WCSession activated: \(activationState.rawValue)")
+
+            // Notify DeviceManager to detect connected devices now that session is active
+            if activationState == .activated {
+                DispatchQueue.main.async {
+                    DeviceManager.shared.onSessionActivated()
+                }
+            }
+        }
+    }
+
+    func sessionDidBecomeInactive(_ session: WCSession) {
+        print("WCSession inactive")
+    }
+
+    func sessionDidDeactivate(_ session: WCSession) {
+        print("WCSession deactivated")
+        session.activate()
+    }
+
+    // Handle requests from Watch
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+        if message["request"] as? String == "accounts" {
+            var response: [String: Any] = [:]
+
+            // Send OTP accounts
+            if let data = UserDefaults.standard.data(forKey: "otp_accounts") {
+                response["accounts"] = data
+            } else {
+                response["accounts"] = Data()
+            }
+
+            // Send auth token
+            if let authToken = UserDefaults.standard.string(forKey: "auth_token") {
+                response["auth_token"] = authToken
+            }
+
+            // Send user data
+            if let userData = UserDefaults.standard.data(forKey: "current_user") {
+                response["user_data"] = userData
+            }
+
+            replyHandler(response)
+        }
+    }
+}
+#endif

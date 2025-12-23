@@ -1,5 +1,8 @@
 import SwiftUI
 import AuthenticationServices
+#if !os(watchOS) && canImport(WatchConnectivity)
+import WatchConnectivity
+#endif
 
 class AuthManager: ObservableObject {
     static let shared = AuthManager()
@@ -15,6 +18,7 @@ class AuthManager: ObservableObject {
         let id: String
         let name: String
         let email: String
+        let provider: String // "apple", "google", or "email"
     }
 
     private init() {
@@ -40,7 +44,7 @@ class AuthManager: ObservableObject {
         Task { @MainActor in
             do {
                 let response = try await api.signInWithApple(userId: userId, email: email, name: name)
-                self.handleAuthSuccess(response)
+                self.handleAuthSuccess(response, provider: "apple")
             } catch {
                 self.handleAuthError(error)
             }
@@ -59,7 +63,7 @@ class AuthManager: ObservableObject {
                     email: "user@gmail.com",
                     name: "Google User"
                 )
-                self.handleAuthSuccess(response)
+                self.handleAuthSuccess(response, provider: "google")
             } catch {
                 self.handleAuthError(error)
             }
@@ -79,7 +83,7 @@ class AuthManager: ObservableObject {
                 } catch {
                     response = try await api.signUpWithEmail(name: name, email: email, password: "default123")
                 }
-                self.handleAuthSuccess(response)
+                self.handleAuthSuccess(response, provider: "email")
             } catch {
                 self.handleAuthError(error)
             }
@@ -91,10 +95,13 @@ class AuthManager: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "current_user")
         currentUser = nil
         isLoggedIn = false
+
+        // Notify Apple Watch of sign out
+        sendAuthToWatch()
     }
 
-    private func handleAuthSuccess(_ response: AuthResponse) {
-        let user = User(id: response.user.id, name: response.user.name, email: response.user.email)
+    private func handleAuthSuccess(_ response: AuthResponse, provider: String) {
+        let user = User(id: response.user.id, name: response.user.name, email: response.user.email, provider: provider)
         self.currentUser = user
         self.isLoggedIn = true
         self.isLoading = false
@@ -103,11 +110,43 @@ class AuthManager: ObservableObject {
         if let userData = try? JSONEncoder().encode(user) {
             UserDefaults.standard.set(userData, forKey: "current_user")
         }
+
+        // Send auth data to Apple Watch
+        sendAuthToWatch()
     }
 
     private func handleAuthError(_ error: Error) {
         self.isLoading = false
         self.errorMessage = error.localizedDescription
         print("Auth error: \(error)")
+    }
+
+    private func sendAuthToWatch() {
+        #if !os(watchOS) && canImport(WatchConnectivity)
+        guard WCSession.isSupported() else { return }
+
+        let session = WCSession.default
+        guard session.activationState == .activated else { return }
+
+        var context: [String: Any] = [:]
+
+        // Send auth token
+        if let authToken = UserDefaults.standard.string(forKey: "auth_token") {
+            context["auth_token"] = authToken
+        }
+
+        // Send user data
+        if let userData = UserDefaults.standard.data(forKey: "current_user") {
+            context["user_data"] = userData
+        }
+
+        // Update application context (persists even when app is not running)
+        do {
+            try session.updateApplicationContext(context)
+            print("✅ Sent auth data to Apple Watch")
+        } catch {
+            print("❌ Failed to send auth to Watch: \(error.localizedDescription)")
+        }
+        #endif
     }
 }

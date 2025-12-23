@@ -9,6 +9,7 @@ import UIKit
 struct OTPRowView: View {
     let account: OTPAccount
     var onDelete: (() -> Void)? = nil
+    var onEdit: (() -> Void)? = nil
 
     @State private var otp = "------"
     @State private var timeRemaining: Double = 30.0
@@ -74,18 +75,24 @@ struct OTPRowView: View {
                 copyToClipboard(otp)
                 showCopiedFeedback()
             }) {
-                Label("Copy Code", systemImage: "doc.on.doc")
+                Label("copy_code", systemImage: "doc.on.doc")
+            }
+
+            if let onEdit = onEdit {
+                Button(action: onEdit) {
+                    Label("edit", systemImage: "pencil")
+                }
             }
 
             if let onDelete = onDelete {
                 Button(role: .destructive, action: onDelete) {
-                    Label("Delete", systemImage: "trash")
+                    Label("delete", systemImage: "trash")
                 }
             }
         }
         .overlay(alignment: .center) {
             if showCopied {
-                Text("Copied!")
+                Text("copied")
                     .font(.caption)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)

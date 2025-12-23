@@ -6,63 +6,14 @@ struct WatchContentView: View {
 
     var body: some View {
         NavigationStack {
-            if otpManager.isLoggedIn {
-                OTPListContent(otpManager: otpManager)
-            } else {
-                WatchLoginView(otpManager: otpManager)
-            }
-        }
-    }
-}
-
-struct WatchLoginView: View {
-    @ObservedObject var otpManager: WatchOTPManager
-    @State private var email = ""
-    @State private var password = ""
-
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                Image(systemName: "shield.lefthalf.filled")
-                    .font(.system(size: 40))
-                    .foregroundStyle(.blue)
-
-                Text("Secure OTP")
-                    .font(.headline)
-
-                TextField("Email", text: $email)
-                    .textContentType(.emailAddress)
-
-                SecureField("Password", text: $password)
-                    .textContentType(.password)
-
-                if otpManager.isLoading {
-                    ProgressView()
-                } else {
-                    Button("Sign In") {
-                        otpManager.signInWithEmail(email: email, password: password)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(email.isEmpty || password.isEmpty)
-                }
-
-                if let error = otpManager.errorMessage {
-                    Text(error)
-                        .font(.caption2)
-                        .foregroundStyle(.red)
-                }
-
-                Text("Sign in on iPhone first")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-            }
-            .padding()
+            OTPListContent(otpManager: otpManager)
         }
     }
 }
 
 struct OTPListContent: View {
     @ObservedObject var otpManager: WatchOTPManager
+    @State private var showActions = false
 
     var body: some View {
         Group {
@@ -74,14 +25,14 @@ struct OTPListContent: View {
                         .font(.system(size: 40))
                         .foregroundStyle(.blue)
 
-                    Text("No OTP Accounts")
+                    Text("no_otp_accounts")
                         .font(.headline)
 
-                    Text("Add accounts on iPhone")
+                    Text("add_accounts_on_iphone")
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
-                    Button("Refresh") {
+                    Button("refresh") {
                         otpManager.syncFromServer()
                     }
                     .buttonStyle(.bordered)
@@ -95,15 +46,36 @@ struct OTPListContent: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    Button("Refresh") {
-                        otpManager.syncFromServer()
-                    }
-                    Button("Sign Out", role: .destructive) {
-                        otpManager.signOut()
-                    }
-                } label: {
+                Button(action: { showActions = true }) {
                     Image(systemName: "ellipsis.circle")
+                }
+            }
+        }
+        .sheet(isPresented: $showActions) {
+            NavigationStack {
+                List {
+                    Button("sync_from_iphone") {
+                        otpManager.requestAccountsFromiPhone()
+                        showActions = false
+                    }
+                    Button("refresh_from_server") {
+                        otpManager.syncFromServer()
+                        showActions = false
+                    }
+                    if otpManager.isLoggedIn {
+                        Button("sign_out", role: .destructive) {
+                            otpManager.signOut()
+                            showActions = false
+                        }
+                    }
+                }
+                .navigationTitle("settings")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("done") {
+                            showActions = false
+                        }
+                    }
                 }
             }
         }

@@ -1,0 +1,65 @@
+/* Common */
+"ok" = "OK";
+"cancel" = "キャンセル";
+"save" = "保存";
+"delete" = "削除";
+"edit" = "編集";
+"done" = "完了";
+"loading" = "読み込み中...";
+"refresh" = "更新";
+
+/* OTP List */
+"otp_services" = "OTPサービス";
+"no_otp_services" = "OTPサービスがありません";
+"tap_to_add" = "'+'をタップしてサービスを追加";
+"copy_code" = "コードをコピー";
+"copied" = "コピーしました！";
+
+/* Account */
+"account" = "アカウント";
+"settings" = "設定";
+"about" = "情報";
+"sign_out" = "サインアウト";
+"guest_user" = "ゲストユーザー";
+"not_signed_in" = "サインインしていません";
+
+/* Settings */
+"language" = "言語";
+"theme" = "テーマ";
+"system" = "システム";
+"light" = "ライト";
+"dark" = "ダーク";
+"use_faceid" = "Face IDを使用";
+"use_touchid" = "Touch IDを使用";
+
+/* About */
+"version" = "バージョン";
+"company" = "会社";
+"website" = "ウェブサイト";
+
+/* Edit OTP */
+"edit_otp_account" = "OTPアカウント編集";
+"account_information" = "アカウント情報";
+"issuer" = "発行者";
+"account_name" = "アカウント名";
+"secret_key" = "シークレットキー";
+"secret_key_copied" = "シークレットキーをコピーしました！";
+"keep_secret_safe" = "このシークレットキーを安全に保管してください。他のOTPアプリでこのアカウントを登録できます。";
+
+/* Add OTP */
+"add_otp_account" = "OTPアカウント追加";
+"scan_qr_code" = "QRコードをスキャン";
+"enter_manually" = "手動入力";
+
+/* Watch */
+"sync_from_iphone" = "iPhoneから同期";
+"refresh_from_server" = "サーバーから更新";
+"no_otp_accounts" = "OTPアカウントがありません";
+"add_accounts_on_iphone" = "iPhoneでアカウントを追加";
+
+/* Sign In */
+"secure_otp" = "セキュアOTP";
+"sign_in_to_continue" = "続けるにはサインインしてください";
+"sign_in_with_apple" = "Appleでサインイン";
+"continue_with_google" = "Googleで続ける";
+"continue_with_email" = "メールで続ける";

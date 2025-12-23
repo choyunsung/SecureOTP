@@ -1,0 +1,65 @@
+/* Common */
+"ok" = "确定";
+"cancel" = "取消";
+"save" = "保存";
+"delete" = "删除";
+"edit" = "编辑";
+"done" = "完成";
+"loading" = "加载中...";
+"refresh" = "刷新";
+
+/* OTP List */
+"otp_services" = "OTP服务";
+"no_otp_services" = "没有OTP服务";
+"tap_to_add" = "点击'+'添加服务";
+"copy_code" = "复制代码";
+"copied" = "已复制！";
+
+/* Account */
+"account" = "账户";
+"settings" = "设置";
+"about" = "关于";
+"sign_out" = "登出";
+"guest_user" = "访客用户";
+"not_signed_in" = "未登录";
+
+/* Settings */
+"language" = "语言";
+"theme" = "主题";
+"system" = "系统";
+"light" = "浅色";
+"dark" = "深色";
+"use_faceid" = "使用Face ID";
+"use_touchid" = "使用Touch ID";
+
+/* About */
+"version" = "版本";
+"company" = "公司";
+"website" = "网站";
+
+/* Edit OTP */
+"edit_otp_account" = "编辑OTP账户";
+"account_information" = "账户信息";
+"issuer" = "发行者";
+"account_name" = "账户名称";
+"secret_key" = "密钥";
+"secret_key_copied" = "密钥已复制！";
+"keep_secret_safe" = "请妥善保管此密钥。您可以使用它在其他OTP应用中注册此账户。";
+
+/* Add OTP */
+"add_otp_account" = "添加OTP账户";
+"scan_qr_code" = "扫描二维码";
+"enter_manually" = "手动输入";
+
+/* Watch */
+"sync_from_iphone" = "从iPhone同步";
+"refresh_from_server" = "从服务器刷新";
+"no_otp_accounts" = "没有OTP账户";
+"add_accounts_on_iphone" = "在iPhone上添加账户";
+
+/* Sign In */
+"secure_otp" = "安全OTP";
+"sign_in_to_continue" = "登录以继续";
+"sign_in_with_apple" = "使用Apple登录";
+"continue_with_google" = "使用Google继续";
+"continue_with_email" = "使用电子邮件继续";

@@ -25,6 +25,26 @@
 		016 /* QRScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116 /* QRScannerView.swift */; };
 		017 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117 /* SplashView.swift */; };
 		018 /* CatalystScreenQRScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118 /* CatalystScreenQRScannerView.swift */; };
+		0A41741EAF68DC4E074BC3EA /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5A55B869F50D4BE023C1A1 /* DeviceManager.swift */; };
+		0AD677083145362653F781D1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAEDD4132552752CF5BA8388 /* Localizable.strings */; };
+		0E218409AF7C8397E8790BEA /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5A55B869F50D4BE023C1A1 /* DeviceManager.swift */; };
+		100E9467E43F94F08E65C3D5 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481B362DE6CC59BD55F718B4 /* SubscriptionView.swift */; };
+		44169241C0A52CFBFDA80A7E /* AppInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286515BEE3B30D64513E9879 /* AppInfoView.swift */; };
+		4ED93B21FC9441BCBB252381 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D04516BEE4FC9C938DD593A /* LocalizationManager.swift */; };
+		50F2F413E884F0F61FAD6376 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481B362DE6CC59BD55F718B4 /* SubscriptionView.swift */; };
+		52B21B1C7B0E63C18A9C44A9 /* AppInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286515BEE3B30D64513E9879 /* AppInfoView.swift */; };
+		53FAFDC1EDB3137939B69E7F /* AccountSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCBAFF5C9B1460824F8E11 /* AccountSelectionView.swift */; };
+		761F4926C2E37A3E8DECAABC /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DFAB4738ECE7D9437AB7A /* AdBannerView.swift */; };
+		7ACADB7FA3582D70071288E1 /* AccountSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCBAFF5C9B1460824F8E11 /* AccountSelectionView.swift */; };
+		968009CA710A6280E7656007 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D04516BEE4FC9C938DD593A /* LocalizationManager.swift */; };
+		A6E9EE2F8591DCDB5F586EB9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAEDD4132552752CF5BA8388 /* Localizable.strings */; };
+		AE78BD5AEF42DF2AA84D0D05 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DFAB4738ECE7D9437AB7A /* AdBannerView.swift */; };
+		B043663492C64A21FC34AD0C /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43999DF4A12535AC66271815 /* SubscriptionManager.swift */; };
+		B8E889EA51BD26F47932BA98 /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43999DF4A12535AC66271815 /* SubscriptionManager.swift */; };
+		CA11F8421A05D4B40BA24C72 /* DeviceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04352583299D4AEB88B88340 /* DeviceListView.swift */; };
+		D311E3AC60B919CADB15A967 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D04516BEE4FC9C938DD593A /* LocalizationManager.swift */; };
+		F4014DB3BAE8F6904CE83F9E /* DeviceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04352583299D4AEB88B88340 /* DeviceListView.swift */; };
+		F5503CDCB97D207B6FC8BE72 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAEDD4132552752CF5BA8388 /* Localizable.strings */; };
 		M001 /* SecureOTPApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101 /* SecureOTPApp.swift */; };
 		M002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102 /* ContentView.swift */; };
 		M003 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103 /* AuthManager.swift */; };
@@ -51,7 +71,19 @@
 		W008 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115 /* APIService.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		50B280FDCDBA969B2B4B578B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 600 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = W400;
+			remoteInfo = "SecureOTP Watch";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		04352583299D4AEB88B88340 /* DeviceListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DeviceListView.swift; sourceTree = "<group>"; };
+		09DC05D606C6A6A828716079 /* ja */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		100 /* SecureOTP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SecureOTP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		101 /* SecureOTPApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureOTPApp.swift; sourceTree = "<group>"; };
 		102 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -71,6 +103,16 @@
 		116 /* QRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerView.swift; sourceTree = "<group>"; };
 		117 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		118 /* CatalystScreenQRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalystScreenQRScannerView.swift; sourceTree = "<group>"; };
+		286515BEE3B30D64513E9879 /* AppInfoView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppInfoView.swift; sourceTree = "<group>"; };
+		2B9DFAB4738ECE7D9437AB7A /* AdBannerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
+		3E5A55B869F50D4BE023C1A1 /* DeviceManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
+		43999DF4A12535AC66271815 /* SubscriptionManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubscriptionManager.swift; sourceTree = "<group>"; };
+		481B362DE6CC59BD55F718B4 /* SubscriptionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
+		6D04516BEE4FC9C938DD593A /* LocalizationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
+		8AA22CF3446265DEBE5BB711 /* ko */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D63CE759FCA3893A92055BC4 /* en */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DBFC29024DC650C68C89B6C3 /* zh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = zh; path = zh.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FBBCBAFF5C9B1460824F8E11 /* AccountSelectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AccountSelectionView.swift; sourceTree = "<group>"; };
 		M100 /* SecureOTP macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SecureOTP macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		M114 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		M115 /* ScreenQRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenQRScannerView.swift; sourceTree = "<group>"; };
@@ -152,6 +194,15 @@
 				112 /* TOTP.swift */,
 				115 /* APIService.swift */,
 				117 /* SplashView.swift */,
+				EAEDD4132552752CF5BA8388 /* Localizable.strings */,
+				6D04516BEE4FC9C938DD593A /* LocalizationManager.swift */,
+				43999DF4A12535AC66271815 /* SubscriptionManager.swift */,
+				481B362DE6CC59BD55F718B4 /* SubscriptionView.swift */,
+				2B9DFAB4738ECE7D9437AB7A /* AdBannerView.swift */,
+				3E5A55B869F50D4BE023C1A1 /* DeviceManager.swift */,
+				04352583299D4AEB88B88340 /* DeviceListView.swift */,
+				286515BEE3B30D64513E9879 /* AppInfoView.swift */,
+				FBBCBAFF5C9B1460824F8E11 /* AccountSelectionView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -201,6 +252,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				891D63C1824B0D80D9E9F36F /* PBXTargetDependency */,
 			);
 			name = SecureOTP;
 			productName = SecureOTP;
@@ -269,6 +321,9 @@
 			knownRegions = (
 				en,
 				Base,
+				ko,
+				ja,
+				zh,
 			);
 			mainGroup = 300;
 			productRefGroup = 302 /* Products */;
@@ -288,6 +343,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				013 /* Assets.xcassets in Resources */,
+				A6E9EE2F8591DCDB5F586EB9 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,6 +352,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				M013 /* Assets.xcassets in Resources */,
+				F5503CDCB97D207B6FC8BE72 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,6 +361,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				W007 /* Assets.xcassets in Resources */,
+				0AD677083145362653F781D1 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,6 +389,14 @@
 				016 /* QRScannerView.swift in Sources */,
 				017 /* SplashView.swift in Sources */,
 				018 /* CatalystScreenQRScannerView.swift in Sources */,
+				D311E3AC60B919CADB15A967 /* LocalizationManager.swift in Sources */,
+				B043663492C64A21FC34AD0C /* SubscriptionManager.swift in Sources */,
+				100E9467E43F94F08E65C3D5 /* SubscriptionView.swift in Sources */,
+				761F4926C2E37A3E8DECAABC /* AdBannerView.swift in Sources */,
+				0E218409AF7C8397E8790BEA /* DeviceManager.swift in Sources */,
+				F4014DB3BAE8F6904CE83F9E /* DeviceListView.swift in Sources */,
+				52B21B1C7B0E63C18A9C44A9 /* AppInfoView.swift in Sources */,
+				53FAFDC1EDB3137939B69E7F /* AccountSelectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,6 +419,14 @@
 				M015 /* APIService.swift in Sources */,
 				M017 /* SplashView.swift in Sources */,
 				M018 /* ScreenQRScannerView.swift in Sources */,
+				4ED93B21FC9441BCBB252381 /* LocalizationManager.swift in Sources */,
+				B8E889EA51BD26F47932BA98 /* SubscriptionManager.swift in Sources */,
+				50F2F413E884F0F61FAD6376 /* SubscriptionView.swift in Sources */,
+				AE78BD5AEF42DF2AA84D0D05 /* AdBannerView.swift in Sources */,
+				0A41741EAF68DC4E074BC3EA /* DeviceManager.swift in Sources */,
+				CA11F8421A05D4B40BA24C72 /* DeviceListView.swift in Sources */,
+				44169241C0A52CFBFDA80A7E /* AppInfoView.swift in Sources */,
+				7ACADB7FA3582D70071288E1 /* AccountSelectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,10 +441,34 @@
 				W005 /* Base32.swift in Sources */,
 				W006 /* TOTP.swift in Sources */,
 				W008 /* APIService.swift in Sources */,
+				968009CA710A6280E7656007 /* LocalizationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		891D63C1824B0D80D9E9F36F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "SecureOTP Watch";
+			target = W400 /* SecureOTP Watch */;
+			targetProxy = 50B280FDCDBA969B2B4B578B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		EAEDD4132552752CF5BA8388 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D63CE759FCA3893A92055BC4 /* en */,
+				8AA22CF3446265DEBE5BB711 /* ko */,
+				09DC05D606C6A6A828716079 /* ja */,
+				DBFC29024DC650C68C89B6C3 /* zh */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		700 /* Debug */ = {
@@ -645,7 +743,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.quettasoft.app.SecureOTP.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -672,7 +770,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.quettasoft.app.SecureOTP.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;

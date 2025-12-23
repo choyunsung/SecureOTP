@@ -253,9 +253,6 @@ struct OTPListView: View {
     private func syncToWatch(_ accountsData: Data) {
         guard WCSession.isSupported() else { return }
 
-        // Ensure WatchConnectivityManager is initialized (handles delegate)
-        _ = WatchConnectivityManager.shared
-
         let session = WCSession.default
 
         // Wait for activation if needed

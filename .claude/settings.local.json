@@ -61,7 +61,9 @@
       "Bash(for file in \"$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/\"*.mobileprovision)",
       "Bash(do echo \"=== $file ===\")",
       "Bash(security cms:*)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(xcode-select:*)",
+      "Bash(xcrun altool:*)"
     ]
   }
 }

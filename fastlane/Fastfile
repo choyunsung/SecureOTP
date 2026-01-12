@@ -102,12 +102,12 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         signingStyle: "manual",
-        teamID: "RRYG347HT4",
+        teamID: "285DRRCCWB",
         provisioningProfiles: {
           "com.quettasoft.app.SecureOTP" => "match AppStore com.quettasoft.app.SecureOTP"
         }
       },
-      xcargs: "CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='match AppStore com.quettasoft.app.SecureOTP' CODE_SIGN_IDENTITY='Apple Distribution: Quetta Soft (285DRRCCWB)' DEVELOPMENT_TEAM=RRYG347HT4"
+      xcargs: "CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='match AppStore com.quettasoft.app.SecureOTP' CODE_SIGN_IDENTITY='Apple Distribution: Quetta Soft (285DRRCCWB)' DEVELOPMENT_TEAM=285DRRCCWB"
     )
 
     # Upload to TestFlight

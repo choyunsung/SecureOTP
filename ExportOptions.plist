@@ -3,8 +3,19 @@
 <plist version="1.0">
 <dict>
 	<key>method</key>
-	<string>debugging</string>
+	<string>app-store</string>
 	<key>teamID</key>
-	<string>RRYG347HT4</string>
+	<string>285DRRCCWB</string>
+	<key>signingStyle</key>
+	<string>manual</string>
+	<key>provisioningProfiles</key>
+	<dict>
+		<key>com.quettasoft.app.SecureOTP</key>
+		<string>match AppStore com.quettasoft.app.SecureOTP</string>
+	</dict>
+	<key>uploadSymbols</key>
+	<true/>
+	<key>destination</key>
+	<string>upload</string>
 </dict>
 </plist>

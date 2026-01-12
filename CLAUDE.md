@@ -27,7 +27,21 @@ open SecureOTP.xcodeproj   # Xcode에서 프로젝트 열기
 
 ### 백엔드 API 상태 확인
 ```bash
+# 로컬 개발
 curl http://localhost:3000/health
+
+# 프로덕션
+curl https://secureotp.quetta-soft.com/health
+```
+
+### 프로덕션 배포 (서버: subdeal@51.161.197.177)
+```bash
+cd /data/SecureOTP && git pull origin main
+cd backend && podman build -t secureotp-backend:latest .
+podman stop secureotp-backend && podman rm secureotp-backend
+podman run -d --name secureotp-backend --restart always \
+  -p 3101:3000 -v /data/SecureOTP/backend/data:/app/data:Z \
+  -e JWT_SECRET='...' secureotp-backend:latest
 ```
 
 ## 아키텍처

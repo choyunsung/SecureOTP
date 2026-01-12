@@ -3,7 +3,7 @@ import Foundation
 class APIService {
     static let shared = APIService()
 
-    private let baseURL = "http://51.161.197.177:3100/api"
+    private let baseURL = "https://secureotp.quetta-soft.com/api"
 
     private var authToken: String? {
         get { UserDefaults.standard.string(forKey: "auth_token") }

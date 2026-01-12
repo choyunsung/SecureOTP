@@ -82,22 +82,36 @@ platform :ios do
     # Ensure we're on a clean state
     ensure_git_status_clean
 
+    # Sync certificates and profiles from Match
+    match(
+      type: "appstore",
+      app_identifier: ["com.quettasoft.app.SecureOTP"],
+      readonly: true
+    )
+
     # Increment build number
     increment_build_number(
       xcodeproj: xcodeproj
     )
 
-    # Build the app with automatic signing
-    build_app(
-      project: xcodeproj,
-      scheme: scheme,
-      clean: true,
-      destination: "generic/platform=iOS",
-      output_directory: "./build",
-      output_name: "SecureOTP-Beta.ipa",
-      export_method: "app-store",
-      xcargs: "-allowProvisioningUpdates"
-    )
+    # Build the iOS app only (using direct xcodebuild commands)
+    # First, archive
+    sh("xcodebuild archive " \
+       "-project ../#{xcodeproj} " \
+       "-target SecureOTP " \
+       "-archivePath ../build/SecureOTP.xcarchive " \
+       "-configuration Release " \
+       "-destination 'generic/platform=iOS' " \
+       "CODE_SIGN_STYLE=Manual " \
+       "PROVISIONING_PROFILE_SPECIFIER='match AppStore com.quettasoft.app.SecureOTP' " \
+       "CODE_SIGN_IDENTITY='Apple Distribution' " \
+       "DEVELOPMENT_TEAM=RRYG347HT4")
+
+    # Then export IPA
+    sh("xcodebuild -exportArchive " \
+       "-archivePath ../build/SecureOTP.xcarchive " \
+       "-exportPath ../build " \
+       "-exportOptionsPlist ../ExportOptions.plist")
 
     # Upload to TestFlight
     upload_to_testflight(

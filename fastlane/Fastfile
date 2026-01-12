@@ -87,7 +87,7 @@ platform :ios do
       xcodeproj: xcodeproj
     )
 
-    # Build the app
+    # Build the app with automatic signing
     build_app(
       project: xcodeproj,
       scheme: scheme,
@@ -96,7 +96,7 @@ platform :ios do
       output_directory: "./build",
       output_name: "SecureOTP-Beta.ipa",
       export_method: "app-store",
-      export_options: "./ExportOptions.plist"
+      xcargs: "-allowProvisioningUpdates"
     )
 
     # Upload to TestFlight

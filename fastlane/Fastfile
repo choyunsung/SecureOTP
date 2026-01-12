@@ -82,12 +82,8 @@ platform :ios do
     # Ensure we're on a clean state
     ensure_git_status_clean
 
-    # Sync certificates and profiles from Match
-    match(
-      type: "appstore",
-      app_identifier: ["com.quettasoft.app.SecureOTP"],
-      readonly: true
-    )
+    # Note: Certificates and profiles are already installed via Match
+    # Skip match step to avoid git clone issues
 
     # Increment build number
     increment_build_number(

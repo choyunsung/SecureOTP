@@ -55,7 +55,13 @@
       "Bash(export APP_STORE_CONNECT_API_KEY_PATH=\"$HOME/Documents/keypair/quetta/app_store_connect_api_key.json\")",
       "Bash(export:*)",
       "Bash(export APP_STORE_CONNECT_ISSUER_ID:*)",
-      "Bash(/bin/bash:*)"
+      "Bash(/bin/bash:*)",
+      "Bash(git clone:*)",
+      "Bash(security find-identity:*)",
+      "Bash(for file in \"$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/\"*.mobileprovision)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(security cms:*)",
+      "Bash(done)"
     ]
   }
 }

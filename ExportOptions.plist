@@ -13,12 +13,7 @@
 	<key>compileBitcode</key>
 	<false/>
 	<key>signingStyle</key>
-	<string>manual</string>
-	<key>provisioningProfiles</key>
-	<dict>
-		<key>com.quettasoft.app.SecureOTP</key>
-		<string>match AppStore com.quettasoft.app.SecureOTP</string>
-	</dict>
+	<string>automatic</string>
 	<key>destination</key>
 	<string>upload</string>
 </dict>

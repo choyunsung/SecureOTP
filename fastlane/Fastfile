@@ -91,6 +91,7 @@ platform :ios do
     )
 
     # Build the iOS app only (without Watch) using iOS-only scheme
+    # Use automatic signing for simplicity
     gym(
       project: xcodeproj,
       scheme: "SecureOTP-iOS",
@@ -100,13 +101,10 @@ platform :ios do
       output_name: "SecureOTP-Beta.ipa",
       export_method: "app-store",
       export_options: {
-        signingStyle: "manual",
-        teamID: "RRYG347HT4",
-        provisioningProfiles: {
-          "com.quettasoft.app.SecureOTP" => "match AppStore com.quettasoft.app.SecureOTP"
-        }
+        signingStyle: "automatic",
+        teamID: "RRYG347HT4"
       },
-      xcargs: "DEVELOPMENT_TEAM=RRYG347HT4 CODE_SIGN_IDENTITY='Apple Distribution'"
+      xcargs: "-allowProvisioningUpdates -authenticationKeyPath '#{ENV['APP_STORE_CONNECT_API_KEY_KEY_FILEPATH']}' -authenticationKeyID '#{ENV['APP_STORE_CONNECT_API_KEY_KEY_ID']}' -authenticationKeyIssuerID '#{ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID']}'"
     )
 
     # Upload to TestFlight

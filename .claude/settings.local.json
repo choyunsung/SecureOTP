@@ -67,7 +67,8 @@
       "Bash(SKIP_GIT_CHECK=1 bundle exec fastlane:*)",
       "Bash(bundle install:*)",
       "Bash(# Find API key file find ~ -name \"\"AuthKey*.p8\"\")",
-      "Bash(# Check if we have the API key file ls -la ~/private_keys/ || ls -la ~/.private_keys/ || ls -la ~/.appstoreconnect/ || echo \"\"Searching for API key...\"\" # Try to find p8 file find ~ -name \"\"*.p8\"\" -type f)"
+      "Bash(# Check if we have the API key file ls -la ~/private_keys/ || ls -la ~/.private_keys/ || ls -la ~/.appstoreconnect/ || echo \"\"Searching for API key...\"\" # Try to find p8 file find ~ -name \"\"*.p8\"\" -type f)",
+      "Bash(bundle exec fastlane:*)"
     ]
   }
 }

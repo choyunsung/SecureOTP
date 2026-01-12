@@ -90,24 +90,24 @@ platform :ios do
       xcodeproj: xcodeproj
     )
 
-    # Build the iOS app only (using direct xcodebuild commands)
-    # First, archive
-    sh("xcodebuild archive " \
-       "-project ../#{xcodeproj} " \
-       "-target SecureOTP " \
-       "-archivePath ../build/SecureOTP.xcarchive " \
-       "-configuration Release " \
-       "-destination 'generic/platform=iOS' " \
-       "CODE_SIGN_STYLE=Manual " \
-       "PROVISIONING_PROFILE_SPECIFIER='match AppStore com.quettasoft.app.SecureOTP' " \
-       "CODE_SIGN_IDENTITY='Apple Distribution' " \
-       "DEVELOPMENT_TEAM=RRYG347HT4")
-
-    # Then export IPA
-    sh("xcodebuild -exportArchive " \
-       "-archivePath ../build/SecureOTP.xcarchive " \
-       "-exportPath ../build " \
-       "-exportOptionsPlist ../ExportOptions.plist")
+    # Build the iOS app only (without Watch) using iOS-only scheme
+    gym(
+      project: xcodeproj,
+      scheme: "SecureOTP-iOS",
+      clean: true,
+      destination: "generic/platform=iOS",
+      output_directory: "./build",
+      output_name: "SecureOTP-Beta.ipa",
+      export_method: "app-store",
+      export_options: {
+        signingStyle: "manual",
+        teamID: "RRYG347HT4",
+        provisioningProfiles: {
+          "com.quettasoft.app.SecureOTP" => "match AppStore com.quettasoft.app.SecureOTP"
+        }
+      },
+      xcargs: "DEVELOPMENT_TEAM=RRYG347HT4 CODE_SIGN_IDENTITY='Apple Distribution'"
+    )
 
     # Upload to TestFlight
     upload_to_testflight(

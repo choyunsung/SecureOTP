@@ -129,6 +129,11 @@ class AddOTPWindowController: NSObject, NSWindowDelegate {
         onAddCallback = nil
         window = nil
     }
+
+    deinit {
+        window?.delegate = nil
+        window = nil
+    }
 }
 
 struct AddOTPWindowContentView: View {
@@ -221,14 +226,17 @@ struct SecureOTPApp: App {
 #if os(macOS)
 class AppDelegate: NSObject, NSApplicationDelegate {
     private let windowFrameKey = "MainWindowFrame"
+    private weak var observedWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.restoreWindowFrame()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.restoreWindowFrame()
         }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
+        // Remove observers before termination to prevent crashes during cleanup
+        removeWindowObservers()
         saveWindowFrame()
     }
 
@@ -251,6 +259,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
 
+        // Remove any existing observers before adding new ones
+        removeWindowObservers()
+
+        // Track the observed window
+        observedWindow = window
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(windowDidResize),
@@ -265,6 +279,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         )
     }
 
+    private func removeWindowObservers() {
+        // Remove observers for the specific window we were observing
+        if let window = observedWindow {
+            NotificationCenter.default.removeObserver(self, name: NSWindow.didResizeNotification, object: window)
+            NotificationCenter.default.removeObserver(self, name: NSWindow.didMoveNotification, object: window)
+        }
+        // Also remove any observers without specific object (safety cleanup)
+        NotificationCenter.default.removeObserver(self, name: NSWindow.didResizeNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSWindow.didMoveNotification, object: nil)
+        observedWindow = nil
+    }
+
     @objc private func windowDidResize(_ notification: Notification) {
         saveWindowFrame()
     }
@@ -277,6 +303,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard let window = NSApplication.shared.windows.first else { return }
         let frameString = NSStringFromRect(window.frame)
         UserDefaults.standard.set(frameString, forKey: windowFrameKey)
+    }
+
+    deinit {
+        removeWindowObservers()
     }
 }
 #endif

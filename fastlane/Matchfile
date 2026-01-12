@@ -1,0 +1,42 @@
+# Matchfile - SecureOTP Code Signing
+# https://docs.fastlane.tools/actions/match/
+
+# Git repository for certificates/profiles storage
+git_url("git@github.com:choyunsung/fastlane-certs.git")
+
+# Storage mode (git or s3)
+storage_mode("git")
+
+# App Identifiers
+app_identifier([
+  "com.quettasoft.app.SecureOTP"
+])
+
+# Apple Developer Account
+username("quettasoft79@gmail.com")
+
+# Team ID
+team_id("RRYG347HT4")
+
+# App Store Connect API Key (비밀번호 대신 사용)
+if ENV["APP_STORE_CONNECT_API_KEY_PATH"]
+  api_key_path(ENV["APP_STORE_CONNECT_API_KEY_PATH"])
+end
+
+# Default type (development, appstore, adhoc, enterprise)
+type("development")
+
+# Read-only mode (fetch only, don't create new profiles)
+readonly(false)
+
+# Force overwrite existing profiles
+force_for_new_devices(true)
+
+# Clone branch
+git_branch("main")
+
+# Skip setting partition list (faster)
+skip_set_partition_list(true)
+
+# Verbose output
+verbose(true)

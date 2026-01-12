@@ -23,7 +23,7 @@ platform :ios do
   # BUILD & TEST
   #############
 
-  desc "Run tests"
+  desc "Run tests on simulator"
   lane :test do
     run_tests(
       project: xcodeproj,
@@ -31,6 +31,34 @@ platform :ios do
       devices: ["iPhone 17 Pro"],
       clean: true
     )
+  end
+
+  desc "Build and run on simulator for testing"
+  lane :simulator do
+    # Build for simulator
+    xcodebuild(
+      project: xcodeproj,
+      scheme: scheme,
+      configuration: "Debug",
+      destination: "platform=iOS Simulator,name=iPhone 17 Pro",
+      build: true,
+      clean: true
+    )
+
+    # Install on simulator
+    install_on_device(
+      device_id: "503485DF-1EB6-4240-9077-2B0DB2F06F14",
+      ipa: "./build/SecureOTP.app"
+    )
+
+    UI.success("App installed on iPhone 17 Pro simulator")
+  end
+
+  desc "Take screenshot on simulator"
+  lane :screenshot_sim do |options|
+    # Capture screenshot
+    sh("xcrun simctl io booted screenshot ../screenshots/#{options[:name] || 'screenshot'}.png")
+    UI.success("Screenshot saved!")
   end
 
   desc "Build the app"
@@ -194,16 +222,14 @@ platform :ios do
     match(
       type: "development",
       app_identifier: [
-        "com.quettasoft.app.SecureOTP",
-        "com.quettasoft.app.SecureOTP.watchkitapp"
+        "com.quettasoft.app.SecureOTP"
       ]
     )
 
     match(
       type: "appstore",
       app_identifier: [
-        "com.quettasoft.app.SecureOTP",
-        "com.quettasoft.app.SecureOTP.watchkitapp"
+        "com.quettasoft.app.SecureOTP"
       ]
     )
   end

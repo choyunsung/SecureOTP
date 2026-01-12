@@ -1,14 +1,16 @@
-# Appfile
-# For more information about the Appfile, see:
+# Appfile - SecureOTP
 # https://docs.fastlane.tools/advanced/#appfile
 
-# App Identifier
-app_identifier("com.quettasoft.app.SecureOTP") # iOS app identifier
-apple_id(ENV["APPLE_ID"]) # Your Apple Developer Portal email address
+# App Identifiers
+app_identifier("com.quettasoft.app.SecureOTP")
 
-# Team ID (found in Apple Developer Portal)
-itc_team_id(ENV["ITC_TEAM_ID"]) # App Store Connect Team ID
-team_id(ENV["TEAM_ID"]) # Developer Portal Team ID
+# Apple Developer Account
+apple_id("quettasoft79@gmail.com")
 
-# For more information about the Appfile, see:
-# https://docs.fastlane.tools/advanced/#appfile
+# Team IDs
+itc_team_id("121426633") # App Store Connect Team ID
+team_id("RRYG347HT4")    # Developer Portal Team ID
+
+# App Store Connect API Key (for CI/CD)
+# API 키는 api_keys.zsh에서 환경 변수로 로드됨
+# APP_STORE_CONNECT_KEY_ID, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_P8_PATH

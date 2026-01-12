@@ -23,11 +23,61 @@ struct OTPListView: View {
         NavigationStack {
             mainContent
         }
+        #elseif os(macOS)
+        VStack(spacing: 0) {
+            // Custom header for macOS
+            HStack {
+                Text("SecureOTP")
+                    .font(.title2)
+                    .fontWeight(.bold)
+
+                Spacer()
+
+                if isSyncing {
+                    ProgressView()
+                        .scaleEffect(0.7)
+                        .frame(width: 28, height: 28)
+                } else {
+                    Button(action: {
+                        AddOTPWindowController.shared.showWindow { account in
+                            addAccount(account)
+                        }
+                    }) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.system(size: 24))
+                            .foregroundStyle(.blue)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Add OTP Account")
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .background(Color(NSColor.windowBackgroundColor))
+
+            Divider()
+
+            // Main content
+            Group {
+                if isLoading && accounts.isEmpty {
+                    Spacer()
+                    ProgressView("Loading...")
+                    Spacer()
+                } else if accounts.isEmpty {
+                    emptyView
+                } else {
+                    listView
+                }
+            }
+        }
+        .frame(minWidth: 320, minHeight: 400)
+        .onAppear { loadAccounts() }
         #else
         mainContent
         #endif
     }
 
+    #if !os(macOS)
     private var mainContent: some View {
         Group {
             if isLoading && accounts.isEmpty {
@@ -46,11 +96,7 @@ struct OTPListView: View {
                         .scaleEffect(0.8)
                 } else {
                     Button(action: {
-                        #if os(macOS)
-                        AddOTPWindowController.shared.showWindow { account in
-                            addAccount(account)
-                        }
-                        #elseif targetEnvironment(macCatalyst)
+                        #if targetEnvironment(macCatalyst)
                         CatalystWindowController.shared.showAddOTPWindow { account in
                             addAccount(account)
                         }
@@ -86,6 +132,7 @@ struct OTPListView: View {
         }
         .refreshable { await syncAccounts() }
     }
+    #endif
 
     private var emptyView: some View {
         VStack(spacing: 20) {

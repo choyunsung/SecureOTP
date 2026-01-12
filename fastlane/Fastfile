@@ -80,7 +80,7 @@ platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
     # Ensure we're on a clean state
-    ensure_git_status_clean
+    ensure_git_status_clean unless ENV["SKIP_GIT_CHECK"]
 
     # Note: Certificates and profiles are already installed via Match
     # Skip match step to avoid git clone issues
@@ -107,7 +107,7 @@ platform :ios do
           "com.quettasoft.app.SecureOTP" => "match AppStore com.quettasoft.app.SecureOTP"
         }
       },
-      xcargs: "CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='match AppStore com.quettasoft.app.SecureOTP' CODE_SIGN_IDENTITY='Apple Distribution: Quetta Soft (285DRRCCWB)' DEVELOPMENT_TEAM=285DRRCCWB"
+      xcargs: "CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='match AppStore com.quettasoft.app.SecureOTP' CODE_SIGN_IDENTITY='iPhone Distribution: Quetta Soft (285DRRCCWB)' DEVELOPMENT_TEAM=285DRRCCWB"
     )
 
     # Upload to TestFlight

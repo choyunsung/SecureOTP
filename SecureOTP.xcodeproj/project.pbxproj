@@ -269,7 +269,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				891D63C1824B0D80D9E9F36F /* PBXTargetDependency */,
 			);
 			name = SecureOTP;
 			productName = SecureOTP;
@@ -474,12 +473,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		891D63C1824B0D80D9E9F36F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "SecureOTP Watch";
-			target = W400 /* SecureOTP Watch */;
-			targetProxy = 50B280FDCDBA969B2B4B578B /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */

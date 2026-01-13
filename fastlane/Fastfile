@@ -86,7 +86,7 @@ platform :ios do
     api_key = app_store_connect_api_key(
       key_id: "4CTKM9K7MB",
       issuer_id: "e719cb18-5d6d-40a9-b6ed-07e4a1fb248d",
-      key_filepath: "/Users/yunsungcho/Documents/keypair/quetta/AuthKey_4CTKM9K7MB.p8"
+      key_filepath: "/Users/yunsung/Documents/keypair/quetta/AuthKey_4CTKM9K7MB.p8"
     )
 
     # Increment build number
@@ -107,7 +107,7 @@ platform :ios do
         signingStyle: "automatic",
         teamID: "285DRRCCWB"
       },
-      xcargs: "-allowProvisioningUpdates -authenticationKeyPath '/Users/yunsungcho/Documents/keypair/quetta/AuthKey_4CTKM9K7MB.p8' -authenticationKeyID '4CTKM9K7MB' -authenticationKeyIssuerID 'e719cb18-5d6d-40a9-b6ed-07e4a1fb248d' DEVELOPMENT_TEAM=285DRRCCWB"
+      xcargs: "-allowProvisioningUpdates -authenticationKeyPath '/Users/yunsung/Documents/keypair/quetta/AuthKey_4CTKM9K7MB.p8' -authenticationKeyID '4CTKM9K7MB' -authenticationKeyIssuerID 'e719cb18-5d6d-40a9-b6ed-07e4a1fb248d' DEVELOPMENT_TEAM=285DRRCCWB"
     )
 
     # Upload to TestFlight

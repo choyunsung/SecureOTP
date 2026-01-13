@@ -44,11 +44,49 @@ function initDatabase() {
     )
   `);
 
+  // Subscriptions/Payments table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS subscriptions (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      product_id TEXT NOT NULL,
+      transaction_id TEXT UNIQUE,
+      original_transaction_id TEXT,
+      purchase_date DATETIME,
+      expires_date DATETIME,
+      is_active INTEGER DEFAULT 1,
+      receipt_data TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    )
+  `);
+
+  // Devices table (for multi-device sync)
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS devices (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      device_name TEXT,
+      device_model TEXT,
+      os_version TEXT,
+      app_version TEXT,
+      push_token TEXT,
+      last_sync_at DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    )
+  `);
+
   // Create indexes
   db.exec(`
     CREATE INDEX IF NOT EXISTS idx_otp_user_id ON otp_accounts(user_id);
     CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
     CREATE INDEX IF NOT EXISTS idx_users_provider ON users(provider, provider_id);
+    CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON subscriptions(user_id);
+    CREATE INDEX IF NOT EXISTS idx_subscriptions_transaction ON subscriptions(transaction_id);
+    CREATE INDEX IF NOT EXISTS idx_devices_user_id ON devices(user_id);
   `);
 
   console.log('Database initialized');

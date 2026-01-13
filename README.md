@@ -40,23 +40,23 @@
 ### Data Flow
 
 ```
-User Account (Authenticator)
-    ↓
-AuthenticationManager
-    ↓
-KeychainHelper (iCloud Keychain)
-    ↓
-Sync across devices
+┌─────────────────────────────────────────────────────────────┐
+│  Frontend (SwiftUI)                                         │
+│  ├── iOS: MainTabView (Tab Navigation)                      │
+│  ├── macOS: MainSidebarView (Sidebar Layout)                │
+│  └── watchOS: WatchContentView (Read-only)                  │
+└────────────────────────┬────────────────────────────────────┘
+                         │ REST API (JWT Auth)
+┌────────────────────────▼────────────────────────────────────┐
+│  Backend (Express.js + SQLite)                              │
+│  ├── /api/auth - Authentication (Apple/Google/Email)        │
+│  └── /api/otp  - OTP CRUD + Sync                            │
+└─────────────────────────────────────────────────────────────┘
 ```
 
+**Sync Flow:**
 ```
-OTP Services
-    ↓
-OTPAccount Models
-    ↓
-KeychainHelper (iCloud Keychain)
-    ↓
-Sync across devices
+UserDefaults (Local) → Server Fetch → Merge (dedupe by secret+accountName) → Local Save → Server Sync
 ```
 
 ## 🏗️ Technical Stack
@@ -70,21 +70,102 @@ Sync across devices
 ## 📂 Project Structure
 
 ```
-SecureSignInClient/
-├── AuthenticationManager.swift    # Authentication logic
-├── AuthenticatorView.swift        # User profile/sign-in screen
-├── SignInView.swift               # Sign-in options (Apple/Google/Email)
-├── OTPServicesView.swift          # OTP services list
-├── OTPAccountRowView.swift        # OTP display component
-├── UserAccount.swift              # User account model
-├── OTPAccount.swift               # OTP account model
-├── KeychainHelper.swift           # Keychain operations
-├── ContentView.swift              # Root navigation
-└── SwiftOTP/                      # TOTP generation
-    ├── SwiftOTP.swift
-    ├── Base32.swift
-    └── Data+Bytes.swift
+SecureOTP/
+├── backend/                          # Node.js/Express Backend API
+│   ├── src/
+│   │   ├── index.js                  # Express app entry point
+│   │   ├── db.js                     # SQLite database (better-sqlite3)
+│   │   ├── middleware/
+│   │   │   └── auth.js               # JWT authentication middleware
+│   │   └── routes/
+│   │       ├── auth.js               # Auth API (Apple/Google/Email)
+│   │       └── otp.js                # OTP CRUD & sync API
+│   ├── data/                         # SQLite database files
+│   ├── package.json
+│   └── Dockerfile                    # Container deployment
+│
+├── SecureOTP/                        # Swift Frontend (Multi-platform)
+│   ├── Shared/                       # Shared code (iOS, macOS, watchOS)
+│   │   ├── SecureOTPApp.swift        # App entry point
+│   │   ├── ContentView.swift         # Root view
+│   │   │
+│   │   ├── # Authentication
+│   │   ├── AuthManager.swift         # Global auth state singleton
+│   │   ├── APIService.swift          # HTTP client for backend API
+│   │   ├── SignInView.swift          # Sign-in options view
+│   │   ├── AccountView.swift         # Account management view
+│   │   │
+│   │   ├── # OTP Core
+│   │   ├── OTPAccount.swift          # OTP model, otpauth:// parsing
+│   │   ├── TOTP.swift                # RFC 6238 TOTP algorithm
+│   │   ├── Base32.swift              # Base32 encoding/decoding
+│   │   ├── OTPListView.swift         # Main OTP list with sync
+│   │   ├── OTPRowView.swift          # Single OTP display row
+│   │   ├── AddOTPView.swift          # Add new OTP view
+│   │   │
+│   │   ├── # Features
+│   │   ├── SubscriptionManager.swift # In-app purchase management
+│   │   ├── SubscriptionView.swift    # Subscription UI
+│   │   ├── BiometricAuthManager.swift# Face ID/Touch ID
+│   │   ├── BiometricSettingsView.swift
+│   │   ├── BiometricLockView.swift
+│   │   ├── DeviceManager.swift       # Device sync management
+│   │   ├── DeviceListView.swift
+│   │   ├── WatchConnectivityManager.swift
+│   │   ├── AdBannerView.swift        # Ad integration
+│   │   │
+│   │   ├── # Utilities
+│   │   ├── LocalizationManager.swift # i18n support
+│   │   ├── SharedUserDefaults.swift  # App Group storage
+│   │   └── SplashView.swift
+│   │
+│   ├── iOS/                          # iOS-specific
+│   │   ├── MainTabView.swift         # Tab navigation (OTP | Account)
+│   │   └── QRScannerView.swift       # Camera QR scanner (Vision)
+│   │
+│   ├── macOS/                        # macOS-specific
+│   │   ├── MainSidebarView.swift     # Sidebar navigation
+│   │   ├── ScreenQRScannerView.swift # Screen capture QR scanner
+│   │   └── CatalystScreenQRScannerView.swift
+│   │
+│   ├── watchOS/                      # watchOS-specific
+│   │   ├── WatchApp.swift            # Watch app entry
+│   │   ├── WatchContentView.swift    # Read-only OTP list
+│   │   └── WatchOTPManager.swift     # Watch state management
+│   │
+│   └── Assets.xcassets/              # App icons & assets
+│
+├── SecureOTP.xcodeproj/              # Xcode project
+│
+├── docs/                             # Documentation
+│   ├── FUNCTIONAL_SPEC.md            # Functional specification
+│   └── TEST_REPORT.md                # Test reports
+│
+├── fastlane/                         # Automated deployment
+├── screenshots/                      # App Store screenshots
+├── SecureSignInClientTests/          # Unit tests
+├── SecureSignInClientUITests/        # UI tests
+│
+├── README.md                         # This file
+├── CLAUDE.md                         # Claude Code instructions
+└── DEPLOYMENT.md                     # Deployment guide
 ```
+
+### Backend API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/auth/signup` | POST | Email signup |
+| `/api/auth/signin` | POST | Email signin |
+| `/api/auth/apple` | POST | Apple OAuth |
+| `/api/auth/google` | POST | Google OAuth |
+| `/api/auth/me` | GET | Get current user (JWT) |
+| `/api/otp` | GET | List OTP accounts (JWT) |
+| `/api/otp` | POST | Add OTP account (JWT) |
+| `/api/otp/sync` | POST | Bulk sync OTP accounts (JWT) |
+| `/api/otp/:id` | PUT | Update OTP account (JWT) |
+| `/api/otp/:id` | DELETE | Delete OTP account (JWT) |
+| `/api/otp/parse-uri` | POST | Parse otpauth:// URI (JWT) |
 
 ## 🔐 Security Features
 

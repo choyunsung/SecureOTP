@@ -45,6 +45,7 @@ class SubscriptionManager: ObservableObject {
     @Published var currentTier: SubscriptionTier = .free
     @Published var isProcessing = false
     @Published var errorMessage: String?
+    @Published var currentSubscription: SubscriptionResponse?
 
     // Product IDs (should match App Store Connect)
     private let proMonthlyProductID = "com.quettasoft.secureotp.pro.monthly"
@@ -64,29 +65,70 @@ class SubscriptionManager: ObservableObject {
     // MARK: - Subscription Management
 
     func loadSubscriptionStatus() {
-        // Load from UserDefaults (in production, verify with StoreKit)
+        // Load from UserDefaults first (offline support)
         if let tierString = UserDefaults.standard.string(forKey: "subscription_tier"),
            let tier = SubscriptionTier(rawValue: tierString) {
             currentTier = tier
+        }
+
+        // Then sync with server if logged in
+        Task {
+            await syncWithServer()
+        }
+    }
+
+    func syncWithServer() async {
+        guard UserDefaults.standard.string(forKey: "auth_token") != nil else { return }
+
+        do {
+            let response = try await APIService.shared.getSubscriptionStatus()
+            await MainActor.run {
+                self.currentSubscription = response.subscription
+                if response.isSubscribed {
+                    self.currentTier = .pro
+                    UserDefaults.standard.set(SubscriptionTier.pro.rawValue, forKey: "subscription_tier")
+                } else {
+                    self.currentTier = .free
+                    UserDefaults.standard.set(SubscriptionTier.free.rawValue, forKey: "subscription_tier")
+                }
+            }
+        } catch {
+            print("Failed to sync subscription with server: \(error.localizedDescription)")
         }
     }
 
     func purchaseProSubscription() async {
         await MainActor.run { isProcessing = true }
 
-        // Simulate purchase for now (implement real StoreKit purchase in production)
+        // TODO: Implement real StoreKit 2 purchase
+        // For now, simulate purchase and sync with server
         do {
             try await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds delay
 
+            // Simulate transaction data (replace with real StoreKit data)
+            let transactionId = UUID().uuidString
+            let expiresDate = Calendar.current.date(byAdding: .month, value: 1, to: Date())!
+
+            // Verify with server
+            let response = try await APIService.shared.verifySubscription(
+                productId: proMonthlyProductID,
+                transactionId: transactionId,
+                originalTransactionId: nil,
+                purchaseDate: Date(),
+                expiresDate: expiresDate,
+                receiptData: nil
+            )
+
             await MainActor.run {
-                currentTier = .pro
+                self.currentSubscription = response.subscription
+                self.currentTier = .pro
                 UserDefaults.standard.set(SubscriptionTier.pro.rawValue, forKey: "subscription_tier")
-                isProcessing = false
+                self.isProcessing = false
             }
         } catch {
             await MainActor.run {
-                errorMessage = error.localizedDescription
-                isProcessing = false
+                self.errorMessage = error.localizedDescription
+                self.isProcessing = false
             }
         }
     }
@@ -94,29 +136,48 @@ class SubscriptionManager: ObservableObject {
     func restorePurchases() async {
         await MainActor.run { isProcessing = true }
 
-        // Simulate restore (implement real StoreKit restore in production)
         do {
-            try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second delay
+            // TODO: Get real transactions from StoreKit 2
+            // For now, just sync with server
+            let response = try await APIService.shared.restoreSubscriptions(transactions: [])
 
             await MainActor.run {
-                // Check if user has active subscription
-                if let tierString = UserDefaults.standard.string(forKey: "subscription_tier"),
-                   let tier = SubscriptionTier(rawValue: tierString) {
-                    currentTier = tier
+                self.currentSubscription = response.subscription
+                if response.isSubscribed {
+                    self.currentTier = .pro
+                    UserDefaults.standard.set(SubscriptionTier.pro.rawValue, forKey: "subscription_tier")
+                } else {
+                    self.currentTier = .free
+                    UserDefaults.standard.set(SubscriptionTier.free.rawValue, forKey: "subscription_tier")
                 }
-                isProcessing = false
+                self.isProcessing = false
             }
         } catch {
             await MainActor.run {
-                errorMessage = error.localizedDescription
-                isProcessing = false
+                self.errorMessage = error.localizedDescription
+                self.isProcessing = false
             }
         }
     }
 
-    func cancelSubscription() {
-        currentTier = .free
-        UserDefaults.standard.set(SubscriptionTier.free.rawValue, forKey: "subscription_tier")
+    func cancelSubscription() async {
+        await MainActor.run { isProcessing = true }
+
+        do {
+            _ = try await APIService.shared.cancelSubscription()
+
+            await MainActor.run {
+                self.currentTier = .free
+                self.currentSubscription = nil
+                UserDefaults.standard.set(SubscriptionTier.free.rawValue, forKey: "subscription_tier")
+                self.isProcessing = false
+            }
+        } catch {
+            await MainActor.run {
+                self.errorMessage = error.localizedDescription
+                self.isProcessing = false
+            }
+        }
     }
 
     // For testing/development

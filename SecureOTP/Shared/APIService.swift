@@ -101,6 +101,96 @@ class APIService {
         return try await post("/otp/parse-uri", body: body)
     }
 
+    // MARK: - Subscription APIs
+
+    func getSubscriptionStatus() async throws -> SubscriptionStatusResponse {
+        return try await get("/subscriptions")
+    }
+
+    func getSubscriptionHistory() async throws -> SubscriptionHistoryResponse {
+        return try await get("/subscriptions/history")
+    }
+
+    func verifySubscription(
+        productId: String,
+        transactionId: String,
+        originalTransactionId: String?,
+        purchaseDate: Date?,
+        expiresDate: Date?,
+        receiptData: String?
+    ) async throws -> SubscriptionVerifyResponse {
+        var body: [String: Any] = [
+            "productId": productId,
+            "transactionId": transactionId
+        ]
+        if let originalTransactionId = originalTransactionId {
+            body["originalTransactionId"] = originalTransactionId
+        }
+        if let purchaseDate = purchaseDate {
+            body["purchaseDate"] = ISO8601DateFormatter().string(from: purchaseDate)
+        }
+        if let expiresDate = expiresDate {
+            body["expiresDate"] = ISO8601DateFormatter().string(from: expiresDate)
+        }
+        if let receiptData = receiptData {
+            body["receiptData"] = receiptData
+        }
+        return try await post("/subscriptions/verify", body: body)
+    }
+
+    func restoreSubscriptions(transactions: [[String: Any]]) async throws -> SubscriptionRestoreResponse {
+        let body: [String: Any] = ["transactions": transactions]
+        return try await post("/subscriptions/restore", body: body)
+    }
+
+    func cancelSubscription() async throws -> SuccessResponse {
+        return try await post("/subscriptions/cancel", body: [:])
+    }
+
+    // MARK: - Device APIs
+
+    func getDevices() async throws -> DeviceListResponse {
+        return try await get("/devices")
+    }
+
+    func registerDevice(
+        deviceId: String,
+        deviceName: String?,
+        deviceModel: String?,
+        osVersion: String?,
+        appVersion: String?,
+        pushToken: String?
+    ) async throws -> DeviceRegisterResponse {
+        var body: [String: Any] = ["deviceId": deviceId]
+        if let deviceName = deviceName { body["deviceName"] = deviceName }
+        if let deviceModel = deviceModel { body["deviceModel"] = deviceModel }
+        if let osVersion = osVersion { body["osVersion"] = osVersion }
+        if let appVersion = appVersion { body["appVersion"] = appVersion }
+        if let pushToken = pushToken { body["pushToken"] = pushToken }
+        return try await post("/devices/register", body: body)
+    }
+
+    func syncDevice(deviceId: String) async throws -> DeviceWrapper {
+        return try await post("/devices/\(deviceId)/sync", body: [:])
+    }
+
+    func updatePushToken(deviceId: String, pushToken: String?) async throws -> DeviceWrapper {
+        let body: [String: Any] = ["pushToken": pushToken ?? NSNull()]
+        return try await put("/devices/\(deviceId)/push-token", body: body)
+    }
+
+    func removeDevice(deviceId: String) async throws {
+        try await delete("/devices/\(deviceId)")
+    }
+
+    func logoutAllDevices(exceptDeviceId: String?) async throws -> LogoutAllResponse {
+        var body: [String: Any] = [:]
+        if let exceptDeviceId = exceptDeviceId {
+            body["exceptDeviceId"] = exceptDeviceId
+        }
+        return try await post("/devices/logout-all", body: body)
+    }
+
     // MARK: - Network Methods
 
     private func get<T: Decodable>(_ path: String) async throws -> T {
@@ -121,6 +211,23 @@ class APIService {
         let url = URL(string: baseURL + path)!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = authToken {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try validateResponse(response)
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+
+    private func put<T: Decodable>(_ path: String, body: [String: Any]) async throws -> T {
+        let url = URL(string: baseURL + path)!
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
         if let token = authToken {
@@ -218,6 +325,119 @@ struct ParsedOTPUri: Codable {
     let algorithm: String
     let digits: Int
     let period: Int
+}
+
+// MARK: - Subscription Response Types
+
+struct SubscriptionStatusResponse: Codable {
+    let subscription: SubscriptionResponse?
+    let isSubscribed: Bool
+}
+
+struct SubscriptionHistoryResponse: Codable {
+    let subscriptions: [SubscriptionResponse]
+}
+
+struct SubscriptionVerifyResponse: Codable {
+    let subscription: SubscriptionResponse
+    let created: Bool?
+    let updated: Bool?
+}
+
+struct SubscriptionRestoreResponse: Codable {
+    let results: [RestoreResult]
+    let subscription: SubscriptionResponse?
+    let isSubscribed: Bool
+}
+
+struct RestoreResult: Codable {
+    let transactionId: String
+    let action: String
+}
+
+struct SubscriptionResponse: Codable {
+    let id: String
+    let productId: String
+    let transactionId: String?
+    let originalTransactionId: String?
+    let purchaseDate: String?
+    let expiresDate: String?
+    let isActive: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case productId = "product_id"
+        case transactionId = "transaction_id"
+        case originalTransactionId = "original_transaction_id"
+        case purchaseDate = "purchase_date"
+        case expiresDate = "expires_date"
+        case isActive = "is_active"
+    }
+
+    var isCurrentlyActive: Bool {
+        guard isActive == 1, let expiresDateStr = expiresDate else { return false }
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = formatter.date(from: expiresDateStr) {
+            return date > Date()
+        }
+        // Try without fractional seconds
+        formatter.formatOptions = [.withInternetDateTime]
+        if let date = formatter.date(from: expiresDateStr) {
+            return date > Date()
+        }
+        return false
+    }
+}
+
+// MARK: - Device Response Types
+
+struct DeviceListResponse: Codable {
+    let devices: [DeviceResponse]
+}
+
+struct DeviceRegisterResponse: Codable {
+    let device: DeviceResponse
+    let created: Bool?
+    let updated: Bool?
+}
+
+struct DeviceWrapper: Codable {
+    let device: DeviceResponse
+}
+
+struct LogoutAllResponse: Codable {
+    let success: Bool
+    let removedCount: Int
+}
+
+struct DeviceResponse: Codable {
+    let id: String
+    let deviceName: String?
+    let deviceModel: String?
+    let osVersion: String?
+    let appVersion: String?
+    let pushToken: String?
+    let lastSyncAt: String?
+    let createdAt: String?
+    let updatedAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case deviceName = "device_name"
+        case deviceModel = "device_model"
+        case osVersion = "os_version"
+        case appVersion = "app_version"
+        case pushToken = "push_token"
+        case lastSyncAt = "last_sync_at"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
+}
+
+struct SuccessResponse: Codable {
+    let success: Bool
+    let cancelled: Bool?
 }
 
 // MARK: - Errors

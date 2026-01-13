@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const otpRoutes = require('./routes/otp');
+const subscriptionRoutes = require('./routes/subscriptions');
+const deviceRoutes = require('./routes/devices');
 const { initDatabase } = require('./db');
 
 const app = express();
@@ -18,6 +20,8 @@ initDatabase();
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/otp', otpRoutes);
+app.use('/api/subscriptions', subscriptionRoutes);
+app.use('/api/devices', deviceRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

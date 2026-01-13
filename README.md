@@ -153,19 +153,43 @@ SecureOTP/
 
 ### Backend API Endpoints
 
+#### Authentication (`/api/auth`)
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/auth/signup` | POST | Email signup |
-| `/api/auth/signin` | POST | Email signin |
-| `/api/auth/apple` | POST | Apple OAuth |
-| `/api/auth/google` | POST | Google OAuth |
-| `/api/auth/me` | GET | Get current user (JWT) |
-| `/api/otp` | GET | List OTP accounts (JWT) |
-| `/api/otp` | POST | Add OTP account (JWT) |
-| `/api/otp/sync` | POST | Bulk sync OTP accounts (JWT) |
-| `/api/otp/:id` | PUT | Update OTP account (JWT) |
-| `/api/otp/:id` | DELETE | Delete OTP account (JWT) |
-| `/api/otp/parse-uri` | POST | Parse otpauth:// URI (JWT) |
+| `/signup` | POST | Email signup |
+| `/signin` | POST | Email signin |
+| `/apple` | POST | Apple OAuth |
+| `/google` | POST | Google OAuth |
+| `/me` | GET | Get current user (JWT) |
+
+#### OTP (`/api/otp`) - All require JWT
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | List OTP accounts |
+| `/` | POST | Add OTP account |
+| `/sync` | POST | Bulk sync OTP accounts |
+| `/:id` | PUT | Update OTP account |
+| `/:id` | DELETE | Delete OTP account |
+| `/parse-uri` | POST | Parse otpauth:// URI |
+
+#### Subscriptions (`/api/subscriptions`) - All require JWT
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Get current subscription status |
+| `/history` | GET | Get subscription history |
+| `/verify` | POST | Verify App Store receipt |
+| `/restore` | POST | Restore purchases |
+| `/cancel` | POST | Cancel subscription |
+
+#### Devices (`/api/devices`) - All require JWT
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | List all devices |
+| `/register` | POST | Register or update device |
+| `/:id/sync` | POST | Update sync timestamp |
+| `/:id/push-token` | PUT | Update push token |
+| `/:id` | DELETE | Remove device |
+| `/logout-all` | POST | Logout from all devices |
 
 ## 🔐 Security Features
 

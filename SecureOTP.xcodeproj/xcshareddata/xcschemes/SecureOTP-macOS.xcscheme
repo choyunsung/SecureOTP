@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "400"
-               BuildableName = "SecureOTP.app"
-               BlueprintName = "SecureOTP"
+               BlueprintIdentifier = "M400"
+               BuildableName = "SecureOTP macOS.app"
+               BlueprintName = "SecureOTP macOS"
                ReferencedContainer = "container:SecureOTP.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "400"
-            BuildableName = "SecureOTP.app"
-            BlueprintName = "SecureOTP"
+            BlueprintIdentifier = "M400"
+            BuildableName = "SecureOTP macOS.app"
+            BlueprintName = "SecureOTP macOS"
             ReferencedContainer = "container:SecureOTP.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "400"
-            BuildableName = "SecureOTP.app"
-            BlueprintName = "SecureOTP"
+            BlueprintIdentifier = "M400"
+            BuildableName = "SecureOTP macOS.app"
+            BlueprintName = "SecureOTP macOS"
             ReferencedContainer = "container:SecureOTP.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

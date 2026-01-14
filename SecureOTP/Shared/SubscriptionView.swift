@@ -159,21 +159,23 @@ struct SubscriptionView: View {
         }
     }
 
-    // Price display based on region
+    // Price display from StoreKit or default
     private var priceString: String {
-        // In production, this will come from StoreKit
-        // StoreKit automatically converts to user's local currency
+        // Use StoreKit product price if available
+        if let product = subscriptionManager.monthlyProduct {
+            return product.displayPrice
+        }
+
+        // Default fallback (will show $2 price once configured in App Store Connect)
         let locale = Locale.current
         let regionCode = locale.region?.identifier ?? "US"
 
         if regionCode == "KR" {
             return "₩2,900"
-        } else if regionCode == "US" {
-            return "$1.99"
         } else if regionCode == "JP" {
             return "¥300"
         } else {
-            return "$1.99" // Default
+            return "$2.00" // Default $2 price
         }
     }
 }

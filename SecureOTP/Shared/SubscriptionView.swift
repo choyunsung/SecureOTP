@@ -110,7 +110,7 @@ struct SubscriptionView: View {
                             .padding(24)
                             .background(
                                 RoundedRectangle(cornerRadius: 16)
-                                    .fill(Color(.systemGray6))
+                                    .fill(Color.gray.opacity(0.15))
                             )
                         }
                     }
@@ -139,7 +139,9 @@ struct SubscriptionView: View {
                 }
             }
             .navigationTitle("subscription")
+            #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("cancel") {
@@ -208,7 +210,7 @@ struct FeatureRow: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color(.systemGray6))
+                .fill(Color.gray.opacity(0.15))
         )
     }
 

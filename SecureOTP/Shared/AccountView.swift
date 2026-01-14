@@ -388,7 +388,9 @@ struct LanguageSelectionView: View {
                 }
             }
             .navigationTitle("language")
+            #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("cancel") {

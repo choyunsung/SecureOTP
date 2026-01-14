@@ -113,7 +113,7 @@ struct AddOTPView: View {
                         .textFieldStyle(.plain)
                         .padding()
                         #if os(iOS)
-                        .background(Color(.systemGray6))
+                        .background(Color.gray.opacity(0.15))
                         #else
                         .background(Color.gray.opacity(0.2))
                         #endif
@@ -132,7 +132,7 @@ struct AddOTPView: View {
                         #endif
                         .padding()
                         #if os(iOS)
-                        .background(Color(.systemGray6))
+                        .background(Color.gray.opacity(0.15))
                         #else
                         .background(Color.gray.opacity(0.2))
                         #endif
@@ -151,7 +151,7 @@ struct AddOTPView: View {
                         .autocorrectionDisabled()
                         .padding()
                         #if os(iOS)
-                        .background(Color(.systemGray6))
+                        .background(Color.gray.opacity(0.15))
                         #else
                         .background(Color.gray.opacity(0.2))
                         #endif

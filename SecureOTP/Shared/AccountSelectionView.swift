@@ -100,7 +100,9 @@ struct AccountSelectionView: View {
                 }
             }
             .navigationTitle("account_management")
+            #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("done") {

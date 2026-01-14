@@ -61,7 +61,7 @@ struct OTPRowView: View {
         }
         .padding(16)
         #if os(iOS)
-        .background(Color(.systemGray6))
+        .background(Color.gray.opacity(0.15))
         #else
         .background(Color.gray.opacity(0.2))
         #endif

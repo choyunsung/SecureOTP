@@ -63,7 +63,7 @@ struct SignInView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 50)
                     #if os(iOS)
-                    .background(Color(.systemGray6))
+                    .background(Color.gray.opacity(0.15))
                     #else
                     .background(Color.gray.opacity(0.2))
                     #endif
@@ -81,7 +81,7 @@ struct SignInView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 50)
                     #if os(iOS)
-                    .background(Color(.systemGray6))
+                    .background(Color.gray.opacity(0.15))
                     #else
                     .background(Color.gray.opacity(0.2))
                     #endif
@@ -158,7 +158,7 @@ struct EmailSignInView: View {
                     .textFieldStyle(.plain)
                     .padding()
                     #if os(iOS)
-                    .background(Color(.systemGray6))
+                    .background(Color.gray.opacity(0.15))
                     #else
                     .background(Color.gray.opacity(0.2))
                     #endif
@@ -172,7 +172,7 @@ struct EmailSignInView: View {
                     #endif
                     .padding()
                     #if os(iOS)
-                    .background(Color(.systemGray6))
+                    .background(Color.gray.opacity(0.15))
                     #else
                     .background(Color.gray.opacity(0.2))
                     #endif

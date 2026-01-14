@@ -113,7 +113,9 @@ struct AppInfoView: View {
                 }
             }
             .navigationTitle("app_info")
+            #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("done") {

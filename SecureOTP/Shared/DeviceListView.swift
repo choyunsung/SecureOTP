@@ -17,7 +17,9 @@ struct DeviceListView: View {
                 }
             }
             .navigationTitle("sync_devices")
+            #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("cancel") {
@@ -142,7 +144,7 @@ struct DeviceRow: View {
             // Device Icon
             ZStack {
                 Circle()
-                    .fill(device.isCurrentDevice ? LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(.systemGray4)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .fill(device.isCurrentDevice ? LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color.gray.opacity(0.3)], startPoint: .topLeading, endPoint: .bottomTrailing))
                     .frame(width: 50, height: 50)
                 Image(systemName: device.deviceType.iconName)
                     .foregroundStyle(.white)

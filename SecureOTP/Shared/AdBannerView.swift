@@ -62,7 +62,7 @@ struct AdBannerView: View {
                     .padding(.vertical, 12)
                 }
                 .buttonStyle(.plain)
-                .background(Color(.systemGray6))
+                .background(Color.gray.opacity(0.15))
             }
             .sheet(isPresented: $showSubscription) {
                 SubscriptionView()

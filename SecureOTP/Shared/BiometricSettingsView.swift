@@ -69,7 +69,9 @@ struct BiometricSettingsView: View {
             }
         }
         .navigationTitle("Face ID & Touch ID")
+        #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
         .alert("Biometric Test", isPresented: $showingAlert) {
             Button("OK", role: .cancel) { }
         } message: {

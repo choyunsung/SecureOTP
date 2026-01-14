@@ -432,7 +432,9 @@ struct EditOTPView: View {
                 }
             }
             .navigationTitle("edit_otp_account")
+            #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("cancel") {

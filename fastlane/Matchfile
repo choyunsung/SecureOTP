@@ -2,14 +2,15 @@
 # https://docs.fastlane.tools/actions/match/
 
 # Git repository for certificates/profiles storage
-git_url("git@github.com:choyunsung/fastlane-certs.git")
+git_url("git@github.com:choyunsung/fastlane-certificates.git")
 
-# Storage mode (git or s3)
+# Storage mode
 storage_mode("git")
 
 # App Identifiers
 app_identifier([
-  "com.quettasoft.app.SecureOTP"
+  "com.quettasoft.app.SecureOTP",
+  "com.quettasoft.app.SecureOTP.watchkitapp"
 ])
 
 # Apple Developer Account
@@ -18,7 +19,7 @@ username("quettasoft79@gmail.com")
 # Team ID
 team_id("RRYG347HT4")
 
-# App Store Connect API Key (비밀번호 대신 사용)
+# App Store Connect API Key
 if ENV["APP_STORE_CONNECT_API_KEY_PATH"]
   api_key_path(ENV["APP_STORE_CONNECT_API_KEY_PATH"])
 end
@@ -26,16 +27,16 @@ end
 # Default type (development, appstore, adhoc, enterprise)
 type("development")
 
-# Read-only mode (fetch only, don't create new profiles)
+# Read-only mode
 readonly(false)
 
-# Force overwrite existing profiles
+# Force overwrite for new devices
 force_for_new_devices(true)
 
 # Clone branch
 git_branch("main")
 
-# Skip setting partition list (faster)
+# Skip setting partition list
 skip_set_partition_list(true)
 
 # Verbose output
